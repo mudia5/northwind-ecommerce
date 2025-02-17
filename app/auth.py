@@ -7,26 +7,44 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.db import get_db
 
+import secrets, string
+
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+@bp.before_app_request
+def assign_sessionID():
+    if 'sessionID' not in session:
+        alphabet = string.ascii_letters
+        session['sessionID'] = ''.join(secrets.choice(alphabet) for _ in range(10))
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        userID = request.form['userID']
+        userID = request.form['userID'].upper()
         password = request.form['password']
         db = get_db()
         error = None
 
         if not userID:
             error = 'Username is required.'
+        elif len(userID) < 5:
+            error = 'Username is not long enough.'
+        elif len(userID) > 5:
+            error = 'Username is too long.'
         elif not password:
             error = 'Password is required.'
 
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO Authentication (userID, password) VALUES (?, ?)",
-                    (userID, generate_password_hash(password)),
+                    "INSERT INTO Customers (CustomerID) VALUES (?)",
+                    (userID,),
+                )
+                db.commit()
+                db.execute(
+                    "INSERT INTO Authentication (userID, password, sessionID) VALUES (?, ?, ?)",
+                    (userID, generate_password_hash(password), session.get('sessionID')),
                 )
                 db.commit()
             except db.IntegrityError:
@@ -41,7 +59,7 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        userID = request.form['userID']
+        userID = request.form['userID'].upper()
         password = request.form['password']
         db = get_db()
         error = None
@@ -56,7 +74,7 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['userID']
+            session['userID'] = user['userID']
             return redirect(url_for('index'))
 
         flash(error)
@@ -65,7 +83,7 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
-    userID = session.get('user_id')
+    userID = session.get('userID')
 
     if userID is None:
         g.user = None

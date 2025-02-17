@@ -12,12 +12,12 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        username = request.form['username']
+        userID = request.form['userID']
         password = request.form['password']
         db = get_db()
         error = None
 
-        if not username:
+        if not userID:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
@@ -25,12 +25,12 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
+                    "INSERT INTO Authentication (userID, password) VALUES (?, ?)",
+                    (userID, generate_password_hash(password)),
                 )
                 db.commit()
             except db.IntegrityError:
-                error = f"User {username} is already registered."
+                error = f"User {userID} is already registered."
             else:
                 return redirect(url_for("auth.login"))
 
@@ -41,22 +41,22 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        userID = request.form['userID']
         password = request.form['password']
         db = get_db()
         error = None
         user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
+            'SELECT * FROM Authentication WHERE userID = ?', (userID,)
         ).fetchone()
 
         if user is None:
-            error = 'Incorrect username.'
+            error = 'Incorrect userID.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['user_id'] = user['userID']
             return redirect(url_for('index'))
 
         flash(error)
@@ -65,13 +65,13 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
+    userID = session.get('user_id')
 
-    if user_id is None:
+    if userID is None:
         g.user = None
     else:
         g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
+            'SELECT * FROM Authentication WHERE userID = ?', (userID,)
         ).fetchone()
         
 @bp.route('/logout')

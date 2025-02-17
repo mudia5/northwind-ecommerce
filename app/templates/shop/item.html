@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Item{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for detail in item %}
+    <article class="item">
+      <header>
+        <div>
+          <h1>
+            <a class="action" href="{{ url_for('shop.item', productID=product['ProductID']) }}">{{ product['ProductName'] }}</a>
+          </h1>
+        </div>
+      </header>
+      <p class="body">Quanity per unit: {{ product['QuantityPerUnit'] }}</p>
+      {% if product['Discontinued'] == '1' %}
+        <p class="body">Discontinued: Yes</p>
+      {% else %}
+        <p class="body">Discontinued: No</p>
+      {% endif %}
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+  <br>
+  <a class="action" href="{{ url_for('shop.products') }}">Go back</a>
+{% endblock %}

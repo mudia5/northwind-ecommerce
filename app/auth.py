@@ -63,11 +63,11 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        db.execute(
-            "UPDATE Authentication SET sessionID = ?",
-            (session.get('sessionID'),)
-        )
-        db.commit()
+        # db.execute(
+        #     "UPDATE Authentication SET sessionID = ?",
+        #     (session.get('sessionID'),)
+        # )
+        # db.commit()
         user = db.execute(
             'SELECT * FROM Authentication WHERE userID = ?', (userID,)
         ).fetchone()
@@ -81,7 +81,6 @@ def login():
             session['userID'] = user['userID']
             session['sessionID'] = user['sessionID']
             redirect_url = session.pop('url', None)
-            print(f"URL stored in session: {redirect_url}")
             if redirect_url:
                 return redirect(redirect_url)
             else:

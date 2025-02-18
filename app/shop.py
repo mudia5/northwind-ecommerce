@@ -115,7 +115,6 @@ def continue_shopping():
     userID = session.get('userID')
     if userID is None:
         session['url'] = url_for('shop.continue_shopping')
-        print(f"URL stored in session: {session['url']}")
     return render_template('shop/continue_shop.html')
 
 @bp.route('/checkout', methods=('GET', 'POST'))
@@ -147,16 +146,23 @@ def checkout():
             employee = db.execute(
                 'SELECT EmployeeID FROM Employees WHERE (LastName, FirstName) = (?, ?)',
                 ('WEB', 'WEB')
-            ).fetchone
-            print(employee['EmployeeID'])
-            # db.execute(
-            #     'INSERT INTO Orders (CustomerID, EmployeeID, ShipName,'
-            #     ' ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry)'
-            #     ' VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            #     (session.get('userID'), employee['EmployeeID'], orderName, orderAddress,
-            #      orderCity, orderRegion, orderPostalCode, orderCountry)
-            # )
-            # db.commit()
+            ).fetchone()
+            db.execute(
+                'INSERT INTO Orders (CustomerID, EmployeeID, ShipName,'
+                ' ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry)'
+                ' VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                (session.get('userID'), employee['EmployeeID'], orderName, orderAddress,
+                 orderCity, orderRegion, orderPostalCode, orderCountry)
+            )
+            # Remove same content from shopping cart
+            # add view of shopping cart
+            # need to fix the part where the same user adds to cart, logs in and gets new shopperID,
+            #   then leaves and starts shopping again not logged in and with a dif shopperID
+            db.execute(
+                'DELETE FROM Shopping_Cart WHERE shopperID = ?',
+                (session.get('shopperID'),)
+            )
+            db.commit()
             return redirect(url_for('shop.done'))
         
     return render_template('shop/checkout.html')

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Checkout{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Name</label>
+    <input name="name" id="name" value="{{ request.form['name'] }}" required>
+    <label for="address">Address</label>
+    <input name="address" id="address" value="{{ request.form['address'] }}" required>
+    <label for="city">City</label>
+    <input name="city" id="city" value="{{ request.form['city'] }}" required>
+    <label for="region">Region</label>
+    <input name="region" id="region" value="{{ request.form['region'] }}" required>
+    <label for="postal_code">Postal Code</label>
+    <input name="postal_code" id="postal_code" value="{{ request.form['postal_code'] }}" required>
+    <label for="country">Country</label>
+    <input name="country" id="country" value="{{ request.form['country'] }}" required>
+    <input type="submit" value="Submit">
+  </form>
+  <br>
+  <a class="action" href="{{ url_for('shop.continue_shopping') }}">Go back</a>
+{% endblock %}

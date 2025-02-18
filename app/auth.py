@@ -63,19 +63,29 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
+        db.execute(
+            "UPDATE Authentication SET sessionID = ?",
+            (session.get('sessionID'),)
+        )
+        db.commit()
         user = db.execute(
             'SELECT * FROM Authentication WHERE userID = ?', (userID,)
         ).fetchone()
-
         if user is None:
             error = 'Incorrect userID.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
         if error is None:
-            session.clear()
+            # session.clear()
             session['userID'] = user['userID']
-            return redirect(url_for('index'))
+            session['sessionID'] = user['sessionID']
+            redirect_url = session.pop('url', None)
+            print(f"URL stored in session: {redirect_url}")
+            if redirect_url:
+                return redirect(redirect_url)
+            else:
+                return redirect(url_for('index'))
 
         flash(error)
 

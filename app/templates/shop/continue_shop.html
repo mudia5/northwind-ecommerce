@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <p>Would you like to continue shopping or checkout?</p>
+  <a class="action" href="{{ url_for('shop.begin') }}">Continue Shopping</a>
+  <br>
+  <br>
+  <a class="action" href="{{ url_for('shop.index') }}">Checkout</a>
+  <!-- Come back and fix checkout link -->
+{% endblock %}

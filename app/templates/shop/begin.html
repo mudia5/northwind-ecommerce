@@ -3,6 +3,10 @@
 {% block content %}
   <p>Would you like to search or browse?</p>
   <a class="action" href="{{ url_for('shop.search') }}">Search</a>
-  <br> <br>
+  <br>
+  <br>
   <a class="action" href="{{ url_for('shop.categories') }}">Browse</a>
+  <br>
+  <br>
+  <a class="action" href="{{ url_for('shop.index') }}">Go back</a>
 {% endblock %}

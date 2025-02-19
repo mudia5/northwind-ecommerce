@@ -17,12 +17,8 @@
       <p class="body">Quanity per unit: {{ product['QuantityPerUnit'] }}</p>
       <p class="body">Unit price: {{ product['UnitPrice'] }}</p>
       <p class="body">Units in stock: {{ product['UnitsInStock'] }}</p>
-      <p class="body">Units on order: {{ product['UnitsOnOrder'] }}</p>
-      <p class="body">Reorder level: {{ product['ReorderLevel'] }}</p>
       {% if product['Discontinued'] == '1' %}
-        <p class="body">Discontinued: Yes</p>
-      {% else %}
-        <p class="body">Discontinued: No</p>
+        <p class="body"><u>Discontinued</u></p>
       {% endif %}
     </article>
     {% if not loop.last %}

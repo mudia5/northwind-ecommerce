@@ -14,15 +14,14 @@
           </h1>
         </div>
       </header>
+      <strong>
+        <p class="body">Category: {{ item['CategoryName'] }}</p>
+      </strong>
       <p class="body">Quanity per unit: {{ item['QuantityPerUnit'] }}</p>
       <p class="body">Unit price: {{ item['UnitPrice'] }}</p>
       <p class="body">Units in stock: {{ item['UnitsInStock'] }}</p>
-      <p class="body">Units on order: {{ item['UnitsOnOrder'] }}</p>
-      <p class="body">Reorder level: {{ item['ReorderLevel'] }}</p>
       {% if item['Discontinued'] == '1' %}
-        <p class="body">Discontinued: Yes</p>
-      {% else %}
-        <p class="body">Discontinued: No</p>
+        <p class="body"><u>Discontinued</u></p>
       {% endif %}
     </article>
     {% if not loop.last %}

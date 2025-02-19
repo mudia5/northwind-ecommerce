@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Shopping Cart{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% if not empty %}
+    {% for item in cart %}
+      <pre class="body">
+      <strong>Product Name: {{ item['ProductName'] }}</strong>
+          Quantity: {{ item['Quantity'] }}
+          Item Price: {{ item['UnitPrice'] }}
+          Total Item Price: {{ item['ItemPrice'] }} = {{ item['Quantity'] }} x {{ item['UnitPrice'] }}
+          <a class="action" href="{{ url_for('shop.remove_item', productID=item['ProductID']) }}">Remove Item</a>
+        </pre>
+      {% if not loop.last %}
+        <hr>
+      {% endif %}
+    {% endfor %}
+    <hr>
+    <pre>
+      <strong>
+      Total Price:  {{ total }}
+      </strong>
+    </pre>
+    <a class="action" href="{{ url_for('shop.clear_cart') }}">Clear Cart</a>
+    <br>
+    <br>
+    <a class="action" href="{{ url_for('shop.checkout') }}">Checkout</a>
+  {% else %}
+    <h2>Cart is empty</h2>
+  {% endif %}
+  <br>
+  <br>
+  <a class="action" href="{{ url_for('shop.index') }}">Continue Shopping / Go Home</a>
+{% endblock %}

@@ -9,17 +9,16 @@
     <header>
       <div>
         <h1>
-        {{ product['ProductName'] }}
+        {{ item['ProductName'] }}
         </h1>
       </div>
     </header>
     <p class="body">Unit price: {{ item['UnitPrice'] }}</p>
-    <p class="body">Quanity: {{ item['Quantity'] }}</p>
-    <p class="body">Discount: {{ item['Discount'] }}</p>
+    <p class="body">Units in stock: {{ item['UnitsInStock'] }}</p>
   </article>
   <form method="post">
     <label for="quantity">Quantity</label>
-    <input name="quantity" id="quantity" value="{{ request.form['quantity'] }}" required>
+    <input name="quantity" value="{{ request.form['quantity'] }}" required>
     <input type="submit" value="Add to Cart">
   </form>
   <br>

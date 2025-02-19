@@ -2,7 +2,10 @@
 
 {% block content %}
   <p>Welcome to the Northwind e-Commerce Website!<br></p>
-  <p>Click the link below to begin shopping.<br></p>
+  <p>Click either link below to begin shopping.<br></p>
   <p>You may log in at any time, however, you must log in to check out.</p>
-  <a class="action" href="{{ url_for('shop.begin') }}">Begin Shopping</a>
+  <a class="action" href="{{ url_for('shop.search') }}">Search</a> - Item name or category name
+  <br>
+  <br>
+  <a class="action" href="{{ url_for('shop.categories') }}">Browse</a> - By category
 {% endblock %}

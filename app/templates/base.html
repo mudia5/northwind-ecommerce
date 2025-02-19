@@ -4,6 +4,7 @@
 <nav>
   <h1>Online Shopping</h1>
   <ul>
+    <li><a href="{{ url_for('shop.shopping_cart') }}">Shopping Cart</a>
     {% if g.user %}
       <li><span>{{ g.user['userID'] }}</span>
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a>

@@ -5,14 +5,14 @@ DROP TABLE IF EXISTS Shopping_Cart;
 CREATE TABLE Authentication (
   userID TEXT PRIMARY KEY,
   password TEXT NOT NULL,
-  sessionID TEXT
+  sessionID TEXT, 
+  FOREIGN KEY (userID) REFERENCES Customers(CustomerID)
 );
 
 CREATE TABLE Shopping_Cart (
   shopperID TEXT NOT NULL,
   productID INTEGER NOT NULL,
   QUANTITY INTEGER NOT NULL CHECK (QUANTITY > 0),
-  title TEXT NOT NULL,
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

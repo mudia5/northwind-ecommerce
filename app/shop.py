@@ -61,8 +61,8 @@ def categories():
     return render_template('shop/categories.html', categories=categories)
 
 
-@bp.route('/<int:categoryID>/products')
-def products(categoryID):
+@bp.route('/<int:categoryID>/<string:categoryName>/products')
+def products(categoryID, categoryName):
     db = get_db()
     products = db.execute(
         'SELECT ProductID, ProductName, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued'
@@ -70,15 +70,15 @@ def products(categoryID):
         ' WHERE CategoryID = ?',
         (categoryID,)
     ).fetchall()
-    return render_template('shop/products.html', products=products)
+    return render_template('shop/products.html', products=products, categoryName=categoryName)
 
 
 @bp.route('/<int:productID>/item', methods=('GET', 'POST'))
 def item(productID):
     db = get_db()
     item = db.execute(
-        'SELECT UnitPrice, UnitsInStock, ProductName'
-        ' FROM Products'
+        'SELECT UnitPrice, UnitsInStock, ProductName, C.CategoryID, CategoryName'
+        ' FROM Products, Categories as C'
         ' WHERE ProductID = ?',
         (productID,)
     ).fetchone()
@@ -108,7 +108,7 @@ def item(productID):
             db.commit()
             return redirect(url_for('shop.continue_shopping'))
     
-    return render_template('shop/item.html', item=item) 
+    return render_template('shop/item.html', item=item)
 
 
 @bp.route('/continue')

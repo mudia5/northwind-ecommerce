@@ -90,8 +90,8 @@ def login() -> Union[str, Response]:
             if session.get('url') is not None:
                 url = session.pop('url')
             session.clear()
-            session['user_id'] = user['user_id']
-            session['session_id'] = user['session_id']
+            session['user_id'] = user['userID']
+            session['session_id'] = user['sessionID']
             session['old_session_id'] = old_session_id
             if url is not None:
                 return redirect(url)
@@ -104,7 +104,7 @@ def login() -> Union[str, Response]:
 
 @bp.before_app_request
 def load_logged_in_user() -> None:
-    user_id: str | None = session.get('userID')
+    user_id: str | None = session.get('user_id')
 
     if user_id is None:
         g.user = None

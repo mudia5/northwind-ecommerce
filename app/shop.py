@@ -48,9 +48,9 @@ def search_results(name: str) -> str:
     product_search_results = db.execute(
                 """
                 SELECT ProductID, ProductName, QuantityPerUnit, UnitPrice, 
-                UnitsInStock, Discontinued, CategoryName'
-                FROM Products'
-                JOIN Categories ON Products.CategoryID = Categories.CategoryID'
+                UnitsInStock, Discontinued, CategoryName
+                FROM Products
+                JOIN Categories ON Products.CategoryID = Categories.CategoryID
                 WHERE ProductName LIKE ? OR CategoryName LIKE ?
                 """,
                 (name, name)

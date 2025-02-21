@@ -86,7 +86,7 @@ def login() -> Union[str, Response]:
             error = 'Incorrect password.'
         if error is None:
             url: str | None = None
-            old_session_id: str = session.pop('sessionID')
+            old_session_id: str = session.pop('session_id')
             if session.get('url') is not None:
                 url = session.pop('url')
             session.clear()

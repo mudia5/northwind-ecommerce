@@ -30,9 +30,17 @@ def insert_test_data(db_path=TEST_DB_PATH):
     with sqlite3.connect(db_path) as conn: 
         cursor = conn.cursor()
     
-    cursor.execute("""INSERT INTO Authentication (userID, password, sessionID) VALUES ('TEST01', 'hashed_password_example', NULL);""")
+    cursor.execute("""
+                   INSERT INTO Authentication (userID, password, sessionID) 
+                   VALUES ('TEST01', 'hashed_password_example', NULL)
+                   """
+                   )
 
-    cursor.execute("""INSERT INTO Shopping_Cart (shopperID, productID, quantity, title) VALUES ('ABC123', 1, 2, 'Test Product');""")
+    cursor.execute("""
+                   INSERT INTO Shopping_Cart (shopperID, productID, quantity, title) 
+                   VALUES ('ABC123', 1, 2, 'Test Product')
+                   """
+                   )
 
     conn.commit()
     print("Test data inserted successfully.")

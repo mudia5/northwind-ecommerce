@@ -12,7 +12,8 @@
           Quantity: {{ item['Quantity'] }}
           Item Price: {{ item['UnitPrice'] }}
           Total Item Price: {{ item['ItemPrice'] }} = {{ item['Quantity'] }} x {{ item['UnitPrice'] }}
-          <a class="action" href="{{ url_for('shop.remove_item', productID=item['ProductID']) }}">Remove Item</a>
+          <a class="action" href="{{ url_for('shop.remove_item',
+           product_id=item['ProductID']) }}">Remove Item</a>
         </pre>
       {% if not loop.last %}
         <hr>

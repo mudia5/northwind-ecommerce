@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Products - {{ categoryName }}{% endblock %}</h1>
+  <h1>{% block title %}Products - {{ products[0]['CategoryName'] }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,8 @@
       <header>
         <div>
           <h1>
-            <a class="action" href="{{ url_for('shop.item', productID=product['ProductID']) }}">{{ product['ProductName'] }}</a>
+            <a class="action" href="{{ url_for('shop.item',
+             product_id=product['ProductID']) }}">{{ product['ProductName'] }}</a>
           </h1>
         </div>
       </header>

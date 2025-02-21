@@ -10,8 +10,8 @@
       <header>
         <div>
           <h1>
-            <a class="action" href="{{ url_for('shop.products', categoryID=category['CategoryID'],
-             categoryName=category['CategoryName']) }}">{{ category['CategoryName'] }}</a>
+            <a class="action" href="{{ url_for('shop.products',
+             category_id=category['CategoryID']) }}">{{ category['CategoryName'] }}</a>
           </h1>
         </div>
       </header>

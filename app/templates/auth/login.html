@@ -6,10 +6,10 @@
 
 {% block content %}
   <form method="post">
-    <label for="userID">UserID</label>
-    <input name="userID" id="userID" required>
+    <label for="user_id">User ID</label>
+    <input name="user_id" required>
     <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
+    <input name="password" required>
     <input type="submit" value="Log In">
   </form>
   <a class="action" href="{{ url_for('shop.index') }}">Go back</a>

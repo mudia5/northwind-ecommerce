@@ -22,5 +22,6 @@
     <input type="submit" value="Add to Cart">
   </form>
   <br>
-  <a class="action" href="{{ url_for('shop.products', categoryID=item['CategoryID'], categoryName=item['CategoryName']) }}">Go back</a>
+  <a class="action" href="{{ url_for('shop.products',
+   category_id=item['CategoryID']) }}">Go back</a>
 {% endblock %}

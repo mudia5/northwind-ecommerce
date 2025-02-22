@@ -26,7 +26,7 @@
 
 See instructions [here.](https://github.com/jpwhite3/northwind-SQLite3?tab=readme-ov-file)  
 
-### 3. Move northwind.db into northwind-ecommerce/app 
+### 3. Move `northwind.db` into northwind-ecommerce/app
 
 ### 4. Create and activate a virtual environment
 On macOS/Linux:

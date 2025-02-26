@@ -1,7 +1,6 @@
 import sqlite3
 import os
 from flask import Flask
-import click
 
 from . import db
 from . import auth
@@ -10,6 +9,7 @@ from . import shop
 BASE_DIR: str = os.path.abspath(os.path.dirname(__file__))
 DB_PATH: str = os.path.join(BASE_DIR, 'northwind.db')
 SCHEMA_PATH: str = os.path.join(BASE_DIR, 'schema.sql')
+
 
 def init_db() -> None:
     try:
@@ -37,10 +37,6 @@ def create_app(test_config=None) -> Flask:
         init_db()
         print("Initialized")
 
-    @app.route('/hello')
-    def hello():
-        return "Hello, World!", 200  
-
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.root_path, 'northwind.db'),
@@ -62,8 +58,3 @@ def create_app(test_config=None) -> Flask:
     app.add_url_rule('/', endpoint='index')
 
     return app
-
-
-
-
-

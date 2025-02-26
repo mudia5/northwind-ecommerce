@@ -13,7 +13,6 @@ def get_db() -> sqlite3.Connection:
         g.db.row_factory = sqlite3.Row
 
     return g.db
-    
 
 
 def close_db(e=None) -> None:
@@ -23,10 +22,10 @@ def close_db(e=None) -> None:
         db.close()
 
 
-
 sqlite3.register_converter(
     'timestamp', lambda v: datetime.fromisoformat(v.decode())
 )
+
 
 def init_app(app: Flask) -> None:
     app.teardown_appcontext(close_db)

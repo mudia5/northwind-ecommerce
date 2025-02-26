@@ -1,9 +1,9 @@
 import pytest
-from flask import g, session, get_flashed_messages
+from flask import session
 from app.db import get_db
 
 
-def test_register(client, app, setup_database):
+def test_register(client, app, setup_database) -> None:
     assert client.get('/auth/register').status_code == 200
     response = client.post(
         '/auth/register', data={'user_id': 'ABCDE', 'password': 'a'}
@@ -12,33 +12,32 @@ def test_register(client, app, setup_database):
     print(f"DEBUG: Register response status = {response.status_code}")
     print(f"DEBUG: Register response headers = {response.headers}")
 
-    assert response.status_code == 302  
+    assert response.status_code == 302
     assert "Location" in response.headers
     assert response.headers["Location"] == "/auth/login"
 
 
 @pytest.mark.parametrize(('user_id', 'password', 'message'), (
-    ('', '', 'Username is required.'),  
-    ('a', '', 'Username is not long enough.'),  
-    ('aaaaa', '', 'Password is required.'),  
-    ('TEST123', 'test', 'Username is too long.')  
+    ('', '', 'Username is required.'),
+    ('a', '', 'Username is not long enough.'),
+    ('aaaaa', '', 'Password is required.'),
+    ('TEST123', 'test', 'Username is too long.')
 ))
-def test_register_validate_input(client, user_id, password, message):
+def test_register_validate_input(client, user_id, password, message) -> None:
     response = client.post(
         '/auth/register',
         data={'user_id': user_id, 'password': password},
         headers={'X-TEST-MODE': '1'}
     )
     assert response.status_code == 400
-    assert response.json['error'] == message  
+    assert response.json['error'] == message
 
 
-
-def test_login(client, auth, setup_database):
+def test_login(client, auth, setup_database) -> None:
     assert client.get('/auth/login').status_code == 200
 
     with client.application.app_context():
-        db = get_db()  
+        db = get_db()
         user = db.execute("SELECT * FROM Authentication WHERE userID = ?", ("ABCDE",)).fetchone()
 
         if user:
@@ -47,10 +46,10 @@ def test_login(client, auth, setup_database):
 
     register_response = client.post('/auth/register', data={'user_id': 'ABCDE', 'password': 'test'})
     print(f"DEBUG: Register response status = {register_response.status_code}")
-    assert register_response.status_code == 302  
+    assert register_response.status_code == 302
 
     with client.application.app_context():
-        db = get_db()  
+        db = get_db()
         user = db.execute("SELECT * FROM Authentication WHERE userID = ?", ("ABCDE",)).fetchone()
         assert user is not None, "User ABCDE was not found in the database after registration."
 
@@ -59,15 +58,16 @@ def test_login(client, auth, setup_database):
     print(f"DEBUG: Login response status = {response.status_code}")
     print(f"DEBUG: Login response headers = {response.headers}")
 
-    assert response.status_code == 302  
+    assert response.status_code == 302
     assert "Location" in response.headers
     assert response.headers["Location"] == "/"
 
+
 @pytest.mark.parametrize(('user_id', 'password', 'message'), (
-    ('WRONG', 'test', 'Incorrect username.'),  
-    ('TEST1', 'wrongpass', 'Incorrect password.'),  
+    ('WRONG', 'test', 'Incorrect username.'),
+    ('TEST1', 'wrongpass', 'Incorrect password.'),
 ))
-def test_login_validate_input(client, auth, setup_database, user_id, password, message):
+def test_login_validate_input(client, auth, setup_database, user_id, password, message) -> None:
     register_response = client.post(
         '/auth/register',
         data={'user_id': 'TEST1', 'password': 'test'},
@@ -91,7 +91,8 @@ def test_login_validate_input(client, auth, setup_database, user_id, password, m
     assert response.status_code == 400
     assert response.json['error'] == message
 
-def test_logout(client, auth):
+
+def test_logout(client, auth) -> None:
     auth.login()
 
     with client:

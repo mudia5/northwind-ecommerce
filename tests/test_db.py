@@ -4,7 +4,7 @@ import pytest
 from app.db import get_db
 
 
-def test_get_close_db(app):
+def test_get_close_db(app) -> None:
     with app.app_context():
         db = get_db()
         assert db is get_db()
@@ -14,7 +14,8 @@ def test_get_close_db(app):
 
     assert 'closed' in str(e.value)
 
-def test_init_db_command(runner, monkeypatch):
+
+def test_init_db_command(runner, monkeypatch) -> None:
     class Recorder(object):
         called = False
 

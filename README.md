@@ -47,11 +47,38 @@ On Windows:
 `flask --app app run --debug`<br><br>
 
 ## Testing
-<br><br>
+### Running the tests
+
+**Run all tests:**
+
+`python3 -m pytest`
+
+**Run tests with coverage:**
+
+`coverage run -m pytest`
+
+**View coverage report:**
+
+`coverage report`
+
+`coverage html`
+
+`open htmlcov/index.html`
+ <br/><br/>
+### Approach to testing 
+
+We followed a **Test-Last (Traditional) approach**, where the code was implemented first and tests were written afterward to validate functionality, allowing us to iterate quickly during development. We focused on **unit testing**, where we validated individual functions in isolation. We structured our tests by writing a dedicated test file for each application module, systematically testing each function one by one. To maximize coverage, we wrote additional tests and incorporated parameterized testing to ensure each branch within a function was called. Since some functions involved database interactions and session management, many of these unit tests also served as **integration tests**, verifying that components such as database queries, authentication, and session handling worked together correctly. We used pytest and Flask’s test client to automate our testing process. By combining these approaches, we achieved a **comprehensive test coverage of 92%**, validating both individual functions and cross-component interactions to ensure the reliability of our application.
+
+### Description of tests 
+`conftest.py`
+`test_auth.py`
+`test_db.py`
+`test_factory.py`
+`test_shop.py`
 
 ## Special Features 
 ### Shopping Cart Page
-One of the most notable features we added is the **Shopping Cart page**, where users can view all products they have added to their cart. This page reflects the `Shopping_Cart` table in the database and provides several key functionalities:
+One of the most notable features we added is the **Shopping Cart page**, where users can view all products they have added to their cart. This page reflects the `Shopping_Cart` relation in the database and provides several key functionalities:
 
 * **Visualizing Cart Items:** Users can see all the items in their cart, helping them keep track of their selections.
 * **Item Removal Options:** Users can remove individual products or clear the entire cart in one action.

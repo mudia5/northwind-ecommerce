@@ -51,7 +51,7 @@ On Windows:
 
 ## Special Features 
 ### Shopping Cart Page
-One of the most notable features we added is the **Shopping Cart page**, where users can view all products they have added to their cart. This page reflects the `Shopping_Cart` table in the database and provides several key functionalities:
+One of the most notable features we added is the **Shopping Cart page**, where users can view all products they have added to their cart. This page reflects the `Shopping_Cart` relation in the database and provides several key functionalities:
 
 * **Visualizing Cart Items:** Users can see all the items in their cart, helping them keep track of their selections.
 * **Item Removal Options:** Users can remove individual products or clear the entire cart in one action.

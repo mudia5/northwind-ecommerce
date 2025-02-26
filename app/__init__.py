@@ -37,6 +37,10 @@ def create_app(test_config=None) -> Flask:
         init_db()
         print("Initialized")
 
+    @app.route('/hello')
+    def hello():
+        return "Hello, World!", 200
+
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.root_path, 'northwind.db'),

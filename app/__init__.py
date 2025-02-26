@@ -1,6 +1,7 @@
 import sqlite3
 import os
 from flask import Flask
+import click
 
 from . import db
 from . import auth
@@ -10,25 +11,35 @@ BASE_DIR: str = os.path.abspath(os.path.dirname(__file__))
 DB_PATH: str = os.path.join(BASE_DIR, 'northwind.db')
 SCHEMA_PATH: str = os.path.join(BASE_DIR, 'schema.sql')
 
+def init_db() -> None:
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            print(f'Connected to {DB_PATH}')
+
+            with open(SCHEMA_PATH, 'r', encoding='utf-8') as schema_file:
+                schema_sql = schema_file.read()
+                cursor.executescript(schema_sql)
+                print('Database schema updated successfully.')
+
+            print(f'Database {DB_PATH} initialized successfully.')
+            print('Initialized')
+
+    except sqlite3.DatabaseError as e:
+        print(f'Error initializing database: {e}')
+
+
 def create_app(test_config=None) -> Flask:
     app: Flask = Flask(__name__, instance_relative_config=True)
 
-    @app.cli.command('init-db')
-    def init_db() -> None:
-        try:
-            with sqlite3.connect(DB_PATH) as conn:
-                cursor = conn.cursor()
-                print(f'Connected to {DB_PATH}')
+    @app.cli.command("init-db")
+    def init_db_command():
+        init_db()
+        print("Initialized")
 
-                with open(SCHEMA_PATH, 'r', encoding='utf-8') as schema_file:
-                    schema_sql = schema_file.read()
-                    cursor.executescript(schema_sql)
-                    print('Database schema updated successfully.')
-
-                print(f'Database {DB_PATH} initialized successfully.')
-
-        except sqlite3.DatabaseError as e:
-            print(f'Error initializing database: {e}')
+    @app.route('/hello')
+    def hello():
+        return "Hello, World!", 200  
 
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -51,3 +62,8 @@ def create_app(test_config=None) -> Flask:
     app.add_url_rule('/', endpoint='index')
 
     return app
+
+
+
+
+

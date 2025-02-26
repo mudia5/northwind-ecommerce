@@ -13,6 +13,7 @@ def get_db() -> sqlite3.Connection:
         g.db.row_factory = sqlite3.Row
 
     return g.db
+    
 
 
 def close_db(e=None) -> None:
@@ -20,6 +21,7 @@ def close_db(e=None) -> None:
 
     if db is not None:
         db.close()
+
 
 
 sqlite3.register_converter(

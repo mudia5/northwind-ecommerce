@@ -27,7 +27,7 @@ def test_cart_page(client, auth):
     auth.login()
     response = client.get('/cart')
     assert response.status_code == 200
-    assert b"Cart is empty" in response.data  # Fix capitalization to match actual response
+    assert b"Cart is empty" in response.data  
 
 def test_checkout(client, auth):
     auth.login()
@@ -50,12 +50,10 @@ def test_add_to_cart_invalid(client, auth, product_id, quantity, message):
     
     if response.status_code == 302:
         assert "Location" in response.headers
-        assert response.headers["Location"] in ["/continue", "/1/item"]  # Accept both cases
+        assert response.headers["Location"] in ["/continue", "/1/item"]  
     elif response.status_code == 200:
-        # If it returned 200, check if error message is flashed
-        assert message.encode() in response.data  # Check if the error message appears in response
+        assert message.encode() in response.data 
     else:
-        # Otherwise, ensure it correctly returns a 400
         assert response.status_code == 400
 
 def test_guest_cannot_checkout(client):
@@ -65,58 +63,54 @@ def test_guest_cannot_checkout(client):
         assert "Location" in response.headers
 
 
-# =============== NEW TESTS TO COVER MISSING LINES ===============
 
 def test_search_page(client):
     """Test search page rendering and validation."""
     response = client.get('/search')
     assert response.status_code == 200
-    assert b"<title>Search - Online Shopping</title>" in response.data  # Ensure it's the correct page
+    assert b"<title>Search - Online Shopping</title>" in response.data  
 
     response = client.post('/search', data={'name': ''})
     assert response.status_code == 200
-    assert b"Name is required" in response.data  # Checking for error message
+    assert b"Name is required" in response.data  
 
 def test_search_results(client):
     """Test search results route with a fake search."""
     response = client.get('/fakeproduct/search-results')
-    assert response.status_code == 200  # Should load, even if no products are found
+    assert response.status_code == 200  
 
 def test_categories_page(client):
     """Test category listing page."""
     response = client.get('/categories')
     assert response.status_code == 200
-    assert b"<title>Categories - Online Shopping</title>" in response.data  # Ensure correct page
+    assert b"<title>Categories - Online Shopping</title>" in response.data  
 
 def test_products_in_category(client):
     """Test products within a category."""
-    response = client.get('/1/products')  # Category ID = 1
-    assert response.status_code in [200, 404]  # If category exists or not
+    response = client.get('/1/products')  
+    assert response.status_code in [200, 404]  
 
 def test_clear_cart(client, auth):
     """Test clearing the shopping cart."""
     auth.login()
     response = client.get('/clear_cart')
-    assert response.status_code == 302  # Should redirect back to cart
+    assert response.status_code == 302  
 
 def test_remove_item(client, auth):
     """Test removing an item from the cart."""
     auth.login()
-    response = client.get('/1remove_item')  # Remove item with product ID 1
-    assert response.status_code == 302  # Should redirect back to cart
+    response = client.get('/1remove_item')  
+    assert response.status_code == 302  
 
 def test_update_stock(client, auth, app):
     """Test stock updates after checkout."""
     auth.login()
 
-    # Establish an app context
     with app.app_context():
         db = get_db()
     
-        # Ensure product does not already exist
         db.execute("DELETE FROM Products WHERE ProductID = 1")
     
-        # Insert a valid product
         db.execute("""
             INSERT INTO Products (ProductID, ProductName, QuantityPerUnit, UnitPrice, UnitsInStock, CategoryID)
             VALUES (1, 'Test Product', '1 unit', 9.99, 10, 1)
@@ -127,8 +121,7 @@ def test_update_stock(client, auth, app):
     with client.session_transaction() as sess:
         sess['session_id'] = 'test_session_123'
 
-        # Now, retrieve session inside an actual request
-    response = client.get("/")  # This request ensures session is properly set
+    response = client.get("/") 
 
     with client.session_transaction() as sess:
         shopper_id = sess.get('session_id')
@@ -157,7 +150,7 @@ def test_update_old_cart_items(client, auth, app):
     """Test updating old cart items with new session."""
     auth.login()
 
-    with app.test_request_context():  # Creates a valid request context
+    with app.test_request_context():  
         session['old_session_id'] = 'old123'
         session['session_id'] = 'new123'
 
@@ -170,54 +163,29 @@ def test_update_old_cart_items(client, auth, app):
             update_old_cart_items(db)
 
             updated_cart = db.execute("SELECT * FROM Shopping_Cart WHERE shopperID = 'new123'").fetchall()
-            assert len(updated_cart) > 0  # Old session items should be transferred to new session
+            assert len(updated_cart) > 0  
 
 
-# 1. Test item page error cases
 @pytest.mark.parametrize(('quantity', 'message'), [
-    ('abc', 'Input quantity contains non-numeric characters.'),  # Non-numeric input
-    ('', 'Quantity is required.'),  # Missing quantity
-    ('10000', 'Quantity exceeds what is in stock.')  # Exceeding stock
+    ('abc', 'Input quantity contains non-numeric characters.'),  
+    ('', 'Quantity is required.'), 
+    ('10000', 'Quantity exceeds what is in stock.')  
 ])
 def test_item_invalid_quantity(client, auth, quantity, message):
     auth.login()
     response = client.post('/1/item', data={'quantity': quantity})
-    assert response.status_code in [200, 302]  # Accept both success and redirect cases
+    assert response.status_code in [200, 302]  
     if response.status_code == 302:
-        assert "Location" in response.headers  # Ensure redirection is happening correctly
+        assert "Location" in response.headers  
 
-
-# Comment out or delete this test
-# @pytest.mark.parametrize(('form_data', 'error_message'), [
-#     ({'name': '', 'address': '123 Main St', 'city': 'NYC', 'region': 'NY', 'postal_code': '10001', 'country': 'USA'},
-#      'Name is required.'),
-#     ({'name': 'John Doe', 'address': '', 'city': 'NYC', 'region': 'NY', 'postal_code': '10001', 'country': 'USA'},
-#      'Address is required.')
-# ])
-# def test_checkout_missing_fields(client, auth, form_data, error_message):
-#     auth.login()
-# 
-#     with client.session_transaction() as sess:
-#         print(f"DEBUG SESSION: {sess}")  # Print session data
-#     assert sess.get("user_id") is not None, "User is not logged in. Check auth.login() setup."
-#     response = client.post('/checkout', data=form_data)
-#     assert response.status_code in [200, 302]  # Allow both cases
-#     if response.status_code == 200:
-#         assert error_message.encode() in response.data
-#     elif response.status_code == 302:
-#         assert response.headers["Location"] == "/auth/login"  # Check correct redirection
-
-
-# 3. Test update_old_cart_items handles missing session ID
 def test_update_old_cart_items_no_old_session(client, app):
     with app.test_request_context():
-        session.clear()  # Remove old_session_id
+        session.clear()  
         with app.app_context():
             db = get_db()
             from app.shop import update_old_cart_items
-            update_old_cart_items(db)  # Should not raise an error even if old_session_id is missing
+            update_old_cart_items(db)  
 
-# 4. Test remove_item actually removes items
 def test_remove_item(client, auth, app):
     auth.login()
     with app.app_context():
@@ -227,19 +195,18 @@ def test_remove_item(client, auth, app):
         db.commit()
 
     response = client.get('/1remove_item')
-    assert response.status_code == 302  # Redirect expected
+    assert response.status_code == 302  
 
     with app.app_context():
         db = get_db()
         result = db.execute("SELECT * FROM Shopping_Cart WHERE ProductID = 1").fetchall()
-        assert len(result) == 0  # Ensure the product was removed
+        assert len(result) == 0  
 
-# 5. Test continue_shopping() sets session variable if user not logged in
 def test_continue_shopping_redirect(client):
     with client.session_transaction() as sess:
-        sess.pop('user_id', None)  # Remove user_id to simulate guest user
+        sess.pop('user_id', None)  
 
     response = client.get('/continue')
-    assert response.status_code == 200  # Page should still render
+    assert response.status_code == 200  
     with client.session_transaction() as sess:
-        assert sess['url'] == '/continue'  # URL should be stored in session
+        assert sess['url'] == '/continue'  

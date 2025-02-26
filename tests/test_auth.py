@@ -59,7 +59,7 @@ def test_login(client, auth, setup_database):
     print(f"DEBUG: Login response status = {response.status_code}")
     print(f"DEBUG: Login response headers = {response.headers}")
 
-    assert response.status_code == 302  # Ensure redirect
+    assert response.status_code == 302  
     assert "Location" in response.headers
     assert response.headers["Location"] == "/"
 

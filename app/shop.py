@@ -145,7 +145,7 @@ def continue_shopping() -> Union[str, Response]:
 
 
 def update_old_cart_items(db: sqlite3.Connection) -> None:
-    old_session_id = session.get('old_session_id')  # Use .get() to avoid KeyError
+    old_session_id = session.get('old_session_id')  
     if not old_session_id:
         return 
     db.execute(

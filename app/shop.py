@@ -109,16 +109,14 @@ def item(product_id) -> Union[str, Response]:
             quantity = int(quantity)
         except ValueError:
             flash('Input quantity contains non-numeric characters.')
-            return redirect(url_for("shop.item", product_id=product_id))  # Prevent further execution
+            return redirect(url_for("shop.item", product_id=product_id))
 
-        units_in_stock = int(item_details['UnitsInStock']) if item_details['UnitsInStock'] else 0  # Convert safely
+        units_in_stock = int(item_details['UnitsInStock']) if item_details['UnitsInStock'] else 0
 
         if quantity == 0:
             error = 'Quantity is required.'
         elif quantity > units_in_stock:
             error = 'Quantity exceeds what is in stock.'
-
-
 
         if error is not None:
             flash(error)
@@ -145,9 +143,9 @@ def continue_shopping() -> Union[str, Response]:
 
 
 def update_old_cart_items(db: sqlite3.Connection) -> None:
-    old_session_id = session.get('old_session_id')  
+    old_session_id = session.get('old_session_id')
     if not old_session_id:
-        return 
+        return
     db.execute(
         """
         UPDATE Shopping_Cart SET shopperID = ? WHERE shopperID = ?

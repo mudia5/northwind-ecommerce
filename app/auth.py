@@ -1,15 +1,14 @@
 import functools
 import secrets
 import string
-import sqlite3
-from typing import Callable, Any, Union
+from typing import Callable, Any, Union, Tuple
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.wrappers import Response
-from flask import jsonify
+
 from app.db import get_db
 
 
@@ -24,7 +23,7 @@ def assign_session_id() -> None:
 
 
 @bp.route('/register', methods=('GET', 'POST'))
-def register():
+def register() -> Union[str, Response, Tuple[Response, int]]:
     if request.method == 'POST':
         user_id = request.form.get('user_id', '').strip().upper()
         password = request.form.get('password', '').strip()
@@ -40,27 +39,27 @@ def register():
         elif len(user_id) > 5:
             return jsonify({'error': 'Username is too long.'}), 400
         elif not password:
-            return jsonify({'error': 'Password is required.'}), 400  
+            return jsonify({'error': 'Password is required.'}), 400
 
         try:
             db.execute("INSERT INTO Customers (CustomerID) VALUES (?)", (user_id,))
             db.commit()
-            db.execute("INSERT INTO Authentication (userID, password, sessionID) VALUES (?, ?, ?)", 
+            db.execute("INSERT INTO Authentication (userID, password, sessionID) VALUES (?, ?, ?)",
                        (user_id, generate_password_hash(password), session.get('session_id')))
             db.commit()
         except db.IntegrityError:
             error = f'User {user_id} is already registered.'
             print(f"DEBUG: Register IntegrityError - {error}")
-            return jsonify({'error': error}), 400  
+            return jsonify({'error': error}), 400
 
         print(f"DEBUG: Registration successful for {user_id}, redirecting to login.")
-        return redirect(url_for('auth.login'))  
+        return redirect(url_for('auth.login'))
 
-    return render_template('auth/register.html')  
+    return render_template('auth/register.html')
 
 
 @bp.route('/login', methods=('GET', 'POST'))
-def login():
+def login() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
     if request.method == 'POST':
         user_id = request.form.get('user_id', '').strip().upper()
         password = request.form.get('password', '').strip()
@@ -75,7 +74,7 @@ def login():
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
-        if error:  
+        if error:
             print(f"DEBUG: Login error - {error}")
             if request.headers.get('X-TEST-MODE'):
                 return jsonify({'error': error}), 400
@@ -88,11 +87,8 @@ def login():
 
         print(f"DEBUG: Login successful for {user_id}, redirecting to /")
 
-        return redirect(url_for('index'))  
+        return redirect(url_for('index'))
     return render_template('auth/login.html')
-
-
-
 
 
 @bp.before_app_request

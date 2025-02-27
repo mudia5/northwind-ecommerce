@@ -51,7 +51,7 @@ On Windows:
 
 **Run all tests:**
 
-`python3 -m pytest`
+`python -m pytest`
 
 **Run tests with coverage:**
 

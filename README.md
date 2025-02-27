@@ -73,7 +73,7 @@ We followed a **Test-Last (Traditional) approach**, where the code was implement
 
 **`test_factory.py`**
 contains tests for the application factory function, ensuring that the Flask app is correctly configured.  
-- `test_config` verifies that the TESTING flag is enabled when passed as an argument and the app is configured accordingly
+- `test_config` verifies that the TESTING flag is enabled when passed as an argument and the app is configured accordingly.
 - `test_hello` ensures that a simple test route (/hello) returns the expected response, providing a foundational check that the application starts with the correct configuration and can handle basic routes.
 <br/><br/>
 
@@ -85,7 +85,7 @@ contains tests for the application factory function, ensuring that the Flask app
 
 **`test_auth.py`** tests the authentication system, including user registration, login, validation, and logout. It ensures that users can successfully register and log in while handling invalid inputs appropriately. Parameterized testing is used to check multiple invalid input cases efficiently, maximizing coverage.
 - `test_register` verifies that users can access the registration page and successfully register with valid credentials. It ensures that a successful registration request redirects users to the login page (/auth/login).
--	`test_register_validate_input` sses parameterized testing to check multiple invalid registration attempts, including missing usernames, usernames that are too short or too long, and missing passwords. It ensures that appropriate error messages are returned for invalid inputs.
+-	`test_register_validate_input` uses parameterized testing to check multiple invalid registration attempts, including missing usernames, usernames that are too short or too long, and missing passwords. It ensures that appropriate error messages are returned for invalid inputs.
 -	`test_login` tests that users can access the login page and successfully log in after registration. This test also interacts with the database to verify that a newly registered user is stored before attempting login.
 -	`test_login_validate_input` uses parameterized testing to validate incorrect login attempts, such as using a non-existent username or an incorrect password. It checks that meaningful error messages are returned when authentication fails.
 -	`test_logout` ensures that a logged-in user can successfully log out and that their session is properly cleared.
@@ -97,13 +97,13 @@ contains tests for the application factory function, ensuring that the Flask app
    - `test_shop_homepage` verifies that the homepage loads successfully and contains expected content.
    - `test_product_page` ensures that individual product pages can be accessed and correctly display the "Add to Cart" button if the product exists.
 - Cart and Checkout
-   - 'test_cart_page' ensures that the cart page loads properly and displays an "empty cart" message when there are no items.
+   - `test_cart_page` ensures that the cart page loads properly and displays an "empty cart" message when there are no items.
    - `test_add_to_cart` tests adding a product to the cart and checks for a successful redirect.
    - `test_clear_cart` verifies that users can successfully clear their shopping cart.
-   -  test_remove_item' checks that users can remove items from their cart.
-   - 'test_checkout' tests the checkout process and verifies that users are redirected or see an order confirmation.
+   - `test_remove_item` checks that users can remove items from their cart.
+   - `test_checkout` tests the checkout process and verifies that users are redirected or see an order confirmation.
    - `test_guest_cannot_checkout` ensures that unauthenticated users cannot complete a checkout.
-   - `test_update_stock` Ensures that product stock is updated correctly after a purchase.
+   - `test_update_stock` Ensures that product stock is updated in the DB correctly after a purchase.
 - Invalid Cart Operations
    - `test_add_to_cart_invalid` uses parameterized testing to check invalid cart operations (e.g., missing product ID, missing quantity, product not found).
    - `test_item_invalid_quantity` ensures that invalid quantities (non-numeric values, empty inputs, excessive values) are handled properly.

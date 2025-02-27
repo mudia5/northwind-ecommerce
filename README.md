@@ -70,10 +70,22 @@ On Windows:
 We followed a **Test-Last (Traditional) approach**, where the code was implemented first and tests were written afterward to validate functionality, allowing us to iterate quickly during development. We focused on **unit testing**, where we validated individual functions in isolation. We structured our tests by writing a dedicated test file for each application module, systematically testing each function one by one. To maximize coverage, we wrote additional tests and incorporated parameterized testing to ensure each branch within a function was called. Since some functions involved database interactions and session management, many of these unit tests also served as **integration tests**, verifying that components such as database queries, authentication, and session handling worked together correctly. We used pytest and Flask’s test client to automate our testing process. By combining these approaches, we achieved a **comprehensive test coverage of 92%**, validating both individual functions and cross-component interactions to ensure the reliability of our application.
 
 ### Description of tests 
-`conftest.py`
-`test_auth.py`
+
+**`test_factory.py`**
+contains tests for the application factory function, ensuring that the Flask app is correctly configured.  
+- `test_config` verifies that the TESTING flag is enabled when passed as an argument and the app is configured accordingly
+- `test_hello` ensures that a simple test route (/hello) returns the expected response, providing a foundational check that the application starts with the correct configuration and can handle basic routes.
+
+**`test_auth.py`** file tests the authentication system, including user registration, login, validation, and logout. It ensures that users can successfully register and log in while handling invalid inputs appropriately. Parameterized testing is used to check multiple invalid input cases efficiently, maximizing coverage.
+- `test_register` verifies that users can access the registration page and successfully register with valid credentials. It ensures that a successful registration request redirects users to the login page (/auth/login).
+•	`test_register_validate_input` sses parameterized testing to check multiple invalid registration attempts, including missing usernames, usernames that are too short or too long, and missing passwords. It ensures that appropriate error messages are returned for invalid inputs.
+•	`test_login` tests that users can access the login page and successfully log in after registration. This test also interacts with the database to verify that a newly registered user is stored before attempting login.
+•	`test_login_validate_input` uses parameterized testing to validate incorrect login attempts, such as using a non-existent username or an incorrect password. It checks that meaningful error messages are returned when authentication fails.
+•	`test_logout` ensures that a logged-in user can successfully log out and that their session is properly cleared.
+
+
 `test_db.py`
-`test_factory.py`
+
 `test_shop.py`
 
 ## Special Features 

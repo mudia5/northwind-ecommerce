@@ -28,12 +28,21 @@ Enter the P2 directory and run the command:
 
 `sqlite3 boston_activities.db < schema.sql`
 
-### 3. Population `boston_actitivies.db` with data
+### 3. Create and activate a virtual environment
+On macOS/Linux:
+`python -m venv venv`
+`source venv/bin/activate`
 
-First, ensure you are using Python 3.11.9
+On Windows:
+`python -m venv venv`
+`venv\Scripts\activate`
+
+Ensure you are using Python 3.11.
+
+### 4. Population `boston_actitivies.db` with data
 
 `python3 generate_data.py`
 
-### 4. Test the data
+### 5. Test the data
 
 Now explore the database!

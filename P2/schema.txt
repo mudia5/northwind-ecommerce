@@ -1,0 +1,57 @@
+
+Database schema:
+Groups(*group_name*, group_description, contact_email, website_url, min_age, max_age, sign_up_price, is_active, register_date)
+    Group description not null
+    Contact email not null
+    Contact email unique
+    Website url unique
+Categories(*category_name*, category_description)
+    Category description not null
+Locations(*location_name*, street_number, street_name, city, zip)
+    Street number not null
+    Street name not null
+    City not null
+    Zip not null
+Events(*event_id*, time_of_day, max_attendees, current_attendees_count, location_name)
+    Location name not null
+    Time of day not null
+    Max attendees not null
+    Max attendees check that (max attendees > 0)
+    Current attendees not null
+    Foreign key location name references the location name in Locations
+Review(*review_id*, rating, comment, user_id, event_id)
+    User id not null
+    Event id not null
+    Rating not null
+    Rating check that (1 <= rating <= 5)
+    Foreign key user_id references the user_id in Users
+    Foreign key event_id references the event_id in Events
+Users(*user_id*, first_name, middle_initial, last_name, email, date_of_birth, gender)
+    First name not null
+    Last name not null
+    Email unique
+    Date of birth not null
+    Gender not null
+    Foreign key user_id references the user_id in User_Phone
+Photos(*photo_id*, photo, photo_description, group_name)
+    Photo not null
+    Photo description not null
+    Group name not null
+    Foreign key group_name references the group_name in Groups
+User_Phone(*user_id*, *phone_number*)
+Belongs(*group_name*, *category_name*)
+    Foreign key group_name references the group_name in Groups
+    Foreign key category_name references the category_name in Categories
+Membership(*user_id*, *group_name*, register_time, join_time, user_role)
+    User role not null
+    User role check that (user role in (‘admin’, ‘member’))
+    Join time not null
+    Register time not null
+    Foreign key group_name references the group_name in Groups
+    Foreign key user_id references the user_id in Users
+Attending(*user_id*, *event_id*)
+    Foreign key user_id references the user_id in Users
+    Foreign key event_id references the event_id in Events
+Hosts(*group_name*, *event_id*)
+    Foreign key group_name references the group_name in Groups
+    Foreign key event_id references the event_id in Events

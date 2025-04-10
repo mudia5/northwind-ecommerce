@@ -38,7 +38,10 @@ def generate_groups(c: sqlite3.Cursor) -> None:
             max_ages[i]
         )
         c.execute(command, params)
-    print('Groups data generated successfully!')
+    try:
+        print('Groups data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into Groups table')
 
 
 def generate_categories(c: sqlite3.Cursor) -> None:
@@ -62,7 +65,10 @@ def generate_categories(c: sqlite3.Cursor) -> None:
             descriptions[i]
         )
         c.execute(command, params)
-    print('Categories data generated successfully!')
+    try:
+        print('Categories data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into categories table')
 
 
 def generate_locations(c: sqlite3.Cursor) -> None:
@@ -73,24 +79,26 @@ def generate_locations(c: sqlite3.Cursor) -> None:
     numbers: list[int] = [randint(1000, 9999) for _ in range(7)]
     streets: list[str] = ['Main Street', 'Elm Street', 'Oak Street', 'Pine Street',
                           'Maple Avenue', 'Willow Road', 'Cedar Lane']
-    cities: list[str] = ['Newton', 'Cambridge', 'Brookline', 'Somerville', 'Watertown',
-                         'Belmont', 'Waltham']
+    # cities: list[str] = ['Newton', 'Cambridge', 'Brookline', 'Somerville', 'Watertown',
+    #                      'Belmont', 'Waltham']
     zips: list[str] = ['02458', '02138', '02445', '02143', '02472', '02478', '02452']
     for i, name in enumerate(names):
         command: str = '''
-                        INSERT INTO [Locations] (location_name, street_number, street_name, city, zip) 
-                        VALUES (?, ?, ?, ?, ?)
+                        INSERT INTO [Locations] (location_name, street_number, street_name, zip) 
+                        VALUES (?, ?, ?, ?)
                         '''
-        params: tuple[str, int, str, str, str] = (
+        params: tuple[str, int, str, str] = (
             name,
             numbers[i],
             streets[i],
-            cities[i],
+            # cities[i],
             zips[i]
         )
         c.execute(command, params)
-    print('Locations data generated successfully!')
-
+    try:
+        print('Locations data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into locations table')
 
 def generate_events(c: sqlite3.Cursor) -> None:
     """Generate dummy data for the events table"""
@@ -98,18 +106,23 @@ def generate_events(c: sqlite3.Cursor) -> None:
     times: list[datetime] = [datetime(2025, 4, 12, 12, 0, 0),
                              datetime(2025, 4, 13, 16, 0, 0)]
     attendees: list[int] = [36, 8]
+    curr_att_count: int = 0
     for i, name in enumerate(location_names):
         command: str = '''
-                        INSERT INTO [Events] (location_name, time_of_day, max_attendees) 
-                        VALUES (?, ?, ?)
+                        INSERT INTO [Events] (location_name, time_of_day, max_attendees, current_attendees_count) 
+                        VALUES (?, ?, ?, ?)
                         '''
-        params: tuple[str, datetime, int] = (
+        params: tuple[str, datetime, int, int] = (
             name,
             times[i],
-            attendees[i]
+            attendees[i],
+            curr_att_count
         )
         c.execute(command, params)
-    print('Events data generated successfully!')
+    try:
+        print('Events data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into events table')
 
 
 def generate_users(c: sqlite3.Cursor) -> None:
@@ -126,7 +139,7 @@ def generate_users(c: sqlite3.Cursor) -> None:
     for i, name in enumerate(first_names):
         command: str = '''
                         INSERT INTO [Users] (first_name, middle_initial, last_name, email, date_of_birth, gender) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?)
                         '''
         last_name: str = last_names[randint(0, len(last_names) - 1)]
         email: str = f'{last_name}.{name}@gmail.com'
@@ -144,7 +157,10 @@ def generate_users(c: sqlite3.Cursor) -> None:
             gender
         )
         c.execute(command, params)
-    print('Users data generated successfully!')
+    try:
+        print('Users data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into users table')
 
 
 def main() -> None:
@@ -161,6 +177,8 @@ def main() -> None:
     print()
 
     db.commit()
+    # Commit first, then continue with the rest of the code
+    # Need to copy over the phone_ids from the users table after its committed
     db.close()
 
 

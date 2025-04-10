@@ -1,5 +1,9 @@
 # Project 2: Boston Area Activities
 
+This database is designed to provide information regarding local activity groups in the greater Boston area. The design supports the ability for users to join and create groups, host and register for events, post group photos and submit reviews. 
+<br><br>
+
+
 ## The Databasers Team
 **Team Lead:** Osamudiamen (Mudia) Eastwood - mudia5
 

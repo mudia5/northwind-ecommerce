@@ -1,57 +1,63 @@
 
 Database schema:
 Groups(*group_name*, group_description, contact_email, website_url, min_age, max_age, sign_up_price, is_active, register_date)
-    Group description not null
-    Contact email not null
-    Contact email unique
-    Website url unique
+    group_description not null
+    contact_email not null
+    check (min_age > 0) 
+    check (max_age > 0)
+    check (sign_up_price > 0)
 Categories(*category_name*, category_description)
-    Category description not null
-Locations(*location_name*, street_number, street_name, city, zip)
-    Street number not null
-    Street name not null
-    City not null
-    Zip not null
+    category_description not null
+Locations(*location_name*, street_number, street_name, zip)
+    street_number not null
+    street_name not null
+    zip not null
+Zip_City(*zip*, city)
+	foreign key (zip) references Locations
+	city not null
 Events(*event_id*, time_of_day, max_attendees, current_attendees_count, location_name)
-    Location name not null
-    Time of day not null
-    Max attendees not null
-    Max attendees check that (max attendees > 0)
-    Current attendees not null
-    Foreign key location name references the location name in Locations
+    location_name not null
+    time_of_day not null
+    check (max attendees > 0)
+    check (current_attendees_count >= 0)
+    current_attendees_count not null
+    foreign key (location_name) references Locations
+    trigger: adjusts current_attendees_count after insert AND deletion on Attending with count of tuples in Attending matching event_id
+    trigger: blocks insert on Event if current_attendees_count does not equal 0
 Review(*review_id*, rating, comment, user_id, event_id)
-    User id not null
-    Event id not null
-    Rating not null
-    Rating check that (1 <= rating <= 5)
-    Foreign key user_id references the user_id in Users
-    Foreign key event_id references the event_id in Events
+    user_id not null
+    event_id not null
+    rating not null
+    check (1 <= rating <= 5)
+    foreign key (user_id) references Users
+    foreign key (event_id) references Events
 Users(*user_id*, first_name, middle_initial, last_name, email, date_of_birth, gender)
-    First name not null
-    Last name not null
-    Email unique
-    Date of birth not null
-    Gender not null
-    Foreign key user_id references the user_id in User_Phone
+    first_name not null
+    last_name not null
+    email not null 
+    unique email
+    date_of_birth not null
 Photos(*photo_id*, photo, photo_description, group_name)
-    Photo not null
-    Photo description not null
-    Group name not null
-    Foreign key group_name references the group_name in Groups
+    photo not null
+    photo_description not null
+    group_name not null
+    foreign key (group_name) references Groups
 User_Phone(*user_id*, *phone_number*)
 Belongs(*group_name*, *category_name*)
-    Foreign key group_name references the group_name in Groups
-    Foreign key category_name references the category_name in Categories
+    foreign key (group_name) Groups
+    foreign key (category_name) references Categories
 Membership(*user_id*, *group_name*, register_time, join_time, user_role)
-    User role not null
-    User role check that (user role in (‘admin’, ‘member’))
-    Join time not null
-    Register time not null
-    Foreign key group_name references the group_name in Groups
-    Foreign key user_id references the user_id in Users
+    user_role not null
+    check (user role in (‘admin’, ‘member’, ‘waitlist’))
+    join_time not null
+    register_time not null
+    foreign key (group_name) references Groups
+    foreign key (user_id) references Users
+    trigger: block insert on Membership if User’s age (calculated using today’s date and date_of_birth) is > max_age or < min_age
 Attending(*user_id*, *event_id*)
-    Foreign key user_id references the user_id in Users
-    Foreign key event_id references the event_id in Events
+    foreign key (user_id) references Users
+    foreign key (event_id) references Events
+    trigger: blocks insert on Attending if Event with matching event_id has max_attendees = current_attendees_count
 Hosts(*group_name*, *event_id*)
-    Foreign key group_name references the group_name in Groups
-    Foreign key event_id references the event_id in Events
+    foreign key (group_name) references Groups
+    foreign key (event_id) references Events

@@ -12,8 +12,16 @@ def random_date(start: datetime, end: datetime) -> date:
     """Generate a random date"""
     delta = end - start
     random_seconds = randint(0, int(delta.total_seconds()))
-    random_datetime = start + timedelta(seconds=random_seconds)
-    return random_datetime.date()
+    random_date_date = start + timedelta(seconds=random_seconds)
+    return random_date_date.date()
+
+
+def random_datetime(start: datetime, end: datetime) -> datetime:
+    """Generate a random datetime"""
+    delta = end - start
+    random_seconds = randint(0, int(delta.total_seconds()))
+    random_date_time = start + timedelta(seconds=random_seconds)
+    return random_date_time
 
 
 def generate_groups(c: sqlite3.Cursor) -> None:
@@ -22,8 +30,8 @@ def generate_groups(c: sqlite3.Cursor) -> None:
     descriptions: list[str] = ['The best soccer players in all of Boston',
                                'An elite group of tennis players']
     emails: list[str] = ['Ateam@gmail.com', 'Victors@gmail.com']
-    min_ages: list[int] = [18, 25]
-    max_ages: list[int] = [40, 55]
+    min_ages: list[int] = [18, 18]
+    max_ages: list[int] = [65, 65]
     for i, name in enumerate(names):
         command: str = '''
                         INSERT INTO [Groups] (group_name, group_description, contact_email,
@@ -79,8 +87,6 @@ def generate_locations(c: sqlite3.Cursor) -> None:
     numbers: list[int] = [randint(1000, 9999) for _ in range(7)]
     streets: list[str] = ['Main Street', 'Elm Street', 'Oak Street', 'Pine Street',
                           'Maple Avenue', 'Willow Road', 'Cedar Lane']
-    # cities: list[str] = ['Newton', 'Cambridge', 'Brookline', 'Somerville', 'Watertown',
-    #                      'Belmont', 'Waltham']
     zips: list[str] = ['02458', '02138', '02445', '02143', '02472', '02478', '02452']
     for i, name in enumerate(names):
         command: str = '''
@@ -91,7 +97,6 @@ def generate_locations(c: sqlite3.Cursor) -> None:
             name,
             numbers[i],
             streets[i],
-            # cities[i],
             zips[i]
         )
         c.execute(command, params)
@@ -99,6 +104,28 @@ def generate_locations(c: sqlite3.Cursor) -> None:
         print('Locations data generated successfully!')
     except sqlite3.OperationalError:
         print('Error inserting data into locations table')
+
+
+def generate_zipcity(c: sqlite3.Cursor) -> None:
+    """Generate dummy data for the zip_city table"""
+    zips: list[str] = ['02458', '02138', '02445', '02143', '02472', '02478', '02452']
+    cities: list[str] = ['Newton', 'Cambridge', 'Brookline', 'Somerville', 'Watertown',
+                         'Belmont', 'Waltham']
+    for i, city in enumerate(cities):
+        command: str = '''
+                        INSERT INTO [Zip_City] (zip, city) 
+                        VALUES (?, ?)
+                        '''
+        params: tuple[str, ...] = (
+            zips[i],
+            city
+        )
+        c.execute(command, params)
+    try:
+        print('Zip city data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into zip_city table')
+
 
 def generate_events(c: sqlite3.Cursor) -> None:
     """Generate dummy data for the events table"""
@@ -123,6 +150,31 @@ def generate_events(c: sqlite3.Cursor) -> None:
         print('Events data generated successfully!')
     except sqlite3.OperationalError:
         print('Error inserting data into events table')
+
+
+def generate_review(c: sqlite3.Cursor) -> None:
+    """Generate dummy data for the reviews table"""
+    ratings: list[int] = [5, 4]
+    user_ids: list[int] = [1, 15]
+    event_ids: list[int] = [1, 2]
+    comments: list[str] = ['Great event! I had a lot of fun and would recommend to a friend.',
+                           'Met some great people and I will certainly come again!']
+    for i, rating in enumerate(ratings):
+        command: str = '''
+                        INSERT INTO [Review] (user_id, event_id, rating, comment) 
+                        VALUES (?, ?, ?, ?)
+                        '''
+        params: tuple[int, int, int, str] = (
+            user_ids[i],
+            event_ids[i],
+            rating,
+            comments[i]
+        )
+        c.execute(command, params)
+    try:
+        print('Review data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into review table')
 
 
 def generate_users(c: sqlite3.Cursor) -> None:
@@ -163,6 +215,124 @@ def generate_users(c: sqlite3.Cursor) -> None:
         print('Error inserting data into users table')
 
 
+def generate_userphone(c: sqlite3.Cursor) -> None:
+    """Generate dummy data for the user_phone table"""
+    user_ids: list[int] = [i for i in range(1, 22)]
+    phone_numbers: list[int] = [int(f'{randint(100, 999)}{randint(100, 999)}{randint(1000, 9999)}')
+                                for _ in range(21)]
+    for i, user_id in enumerate(user_ids):
+        command: str = '''
+                        INSERT INTO [User_Phone] (user_id, phone_number) 
+                        VALUES (?, ?)
+                        '''
+        params: tuple[int, ...] = (
+            user_id,
+            phone_numbers[i]
+        )
+        c.execute(command, params)
+    try:
+        print('User phone data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into user phone table')
+
+
+def generate_belongs(c: sqlite3.Cursor) -> None:
+    """Generate dummy data for the belongs table"""
+    group_names: list[str] = ['The A-Team', 'Victory Is Ours']
+    category_names: list[str] = ["Men's Soccer", "Women's Tennis"]
+    for i, group_name in enumerate(group_names):
+        command: str = '''
+                        INSERT INTO [Belongs] (group_name, category_name) 
+                        VALUES (?, ?)
+                        '''
+        params: tuple[str, str] = (
+            group_name,
+            category_names[i]
+        )
+        c.execute(command, params)
+    try:
+        print('Belongs data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into belongs table')
+
+
+def generate_membership(c: sqlite3.Cursor) -> None:
+    """Generate dummy data for the membership table"""
+    group_names: list[str] = ['The A-Team', 'Victory Is Ours']
+    user_ids: list[int] = [i for i in range(21)]
+    join_times: list[datetime] = [random_datetime(
+                datetime.strptime('2024-05-21', '%Y-%m-%d'),
+                datetime.strptime('2024-05-26', '%Y-%m-%d'),
+            ) for _ in range(21)]
+    for i, user_id in enumerate(user_ids):
+        command: str = '''
+                        INSERT INTO [Membership] (group_name, user_id, user_role, join_time, register_time) 
+                        VALUES (?, ?, ?, ?, ?)
+                        '''
+        user_role: str = 'member'
+        if i in (0, 15):
+            user_role = 'admin'
+        group_name: str = group_names[0]
+        if i > 14:
+            group_name = group_names[1]
+        join_times[0] = datetime(2024, 1, 10, 12, 0, 0)
+        join_times[15] = datetime(2024, 5, 15, 12, 0, 0)
+        params: tuple[str, int, str, datetime, datetime] = (
+            group_name,
+            user_id + 1,
+            user_role,
+            join_times[i],
+            join_times[i]
+        )
+        c.execute(command, params)
+    try:
+        print('Membership data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into membership table')
+
+
+def generate_attending(c: sqlite3.Cursor) -> None:
+    """Generate dummy data for the attending table"""
+    event_id: int = 1
+    user_ids: list[int] = [i for i in range(1, 22)]
+    for user_id in user_ids:
+        if user_id > 14:
+            event_id = 2
+        command: str = '''
+                        INSERT INTO [Attending] (event_id, user_id) 
+                        VALUES (?, ?)
+                        '''
+        params: tuple[int, int] = (
+            event_id,
+            user_id
+        )
+        c.execute(command, params)
+    try:
+        print('Attending data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into attending table')
+
+
+def generate_hosts(c: sqlite3.Cursor) -> None:
+    """Generate dummy data for the hosts table"""
+    event_ids: list[int] = [1, 2]
+    names: list[str] = ['The A-Team', 'Victory Is Ours']
+    for i, name in enumerate(names):
+        command: str = '''
+                        INSERT INTO [Hosts] (group_name, event_id) 
+                        VALUES (?, ?)
+                        '''
+        params: tuple[str, int] = (
+            name,
+            event_ids[i]
+        )
+        c.execute(command, params)
+    try:
+        print('Hosts data generated successfully!')
+    except sqlite3.OperationalError:
+        print('Error inserting data into hosts table')
+
+
 def main() -> None:
     """The main function"""
     db: sqlite3.Connection = sqlite3.connect('./boston_activities.db')
@@ -172,13 +342,18 @@ def main() -> None:
     generate_groups(c)
     generate_categories(c)
     generate_locations(c)
+    generate_zipcity(c)
     generate_events(c)
+    generate_review(c)
     generate_users(c)
-    print()
+    generate_userphone(c)
+    generate_belongs(c)
+    generate_membership(c)
+    generate_attending(c)
+    generate_hosts(c)
+    print('Success!\n')
 
     db.commit()
-    # Commit first, then continue with the rest of the code
-    # Need to copy over the phone_ids from the users table after its committed
     db.close()
 
 

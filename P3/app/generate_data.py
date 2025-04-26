@@ -340,9 +340,9 @@ def generate_hosts(c: sqlite3.Cursor) -> None:
         print('Error inserting data into hosts table')
 
 
-def main() -> None:
+def main(db_path: str = './boston_activities.db') -> None:
     """The main function"""
-    db: sqlite3.Connection = sqlite3.connect('./boston_activities.db')
+    db: sqlite3.Connection = sqlite3.connect(db_path)
     c: sqlite3.Cursor = db.cursor()
 
     print('\nGenerating data...')

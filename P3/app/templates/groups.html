@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}Groups{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for g in groups %}
+    {% if g['is_active'] == 1 %}
+        <article class="group">
+            <header>
+                <div>
+                    <h1>
+                        {{ g['group_name'] }}
+                    </h1>
+                </div>
+            </header>
+        <p class="body">Description: {{ g['group_description'] }}</p>
+        <p class="body">Email: {{ g['contact_email'] }}</p>
+        {% if g['website_url'] %}
+            <p class="body">Website: {{ g['website_url'] }}</p>
+        {% endif %}
+        {% if g['min_age'] %}
+            <p class="body">Minimum age: {{ g['min_age'] }}</p>
+        {% endif %}
+        {% if g['max_age'] %}
+            <p class="body">Maximum age: {{ g['max_age'] }}</p>
+        {% endif %}
+        {% if g['sign_up_price'] %}
+            <p class="body">Price: {{ g['sign_up_price'] }}</p>
+        {% endif %}
+        {% if g['register_date'] %}
+            <p class="body">Date created: {{ g['register_date'] }}</p>
+        {% endif %}
+        </article>
+        {% if not loop.last %}
+        <hr>
+        {% endif %}
+    {% endif %}
+  {% endfor %}
+  <br>
+  <a class="action" href="{{ url_for('index') }}">Go back</a>
+{% endblock %}

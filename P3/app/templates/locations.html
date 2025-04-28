@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}Locations{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for l in locations %}
+    <article class="location">
+        <header>
+            <div>
+                <h1>
+                    {{ l['location_name'] }}
+                </h1>
+            </div>
+        </header>
+    <p class="body">{{ l['street_number'] }} {{ l['street_name'] }}, {{ l['city'] }}, {{ l['zip'] }}</p>
+    </article>
+    {% if not loop.last %}
+        <hr>
+    {% endif %}
+  {% endfor %}
+  <br>
+  <a class="action" href="{{ url_for('browse.events') }}">Go back</a>
+{% endblock %}

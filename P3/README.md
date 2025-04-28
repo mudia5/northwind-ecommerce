@@ -25,8 +25,8 @@
 ### 2. Create and activate a virtual environment
 
 On macOS/Linux:
-`python -m venv venv`
-`source venv/bin/activate`
+`python -m venv .venv`
+`. .venv/bin/activate`
 
 On Windows:
 `python -m venv venv`
@@ -40,23 +40,21 @@ On Windows:
 
 `cd app`
 
-`cp ../../P2/schema.sql .`
-
 `sqlite3 boston_activities.db < schema.sql`
 
 ### 5. Populate `boston_actitivies.db` with data
 
-`python3 ../../P2/generate_data.py`
+`python3 generate_data.py`
 
 The deprecation messages may be ignored as they do not affect the output.
 
 `cd ..`
 
-### 6. Initialize the database
+<!-- ### 6. Initialize the database
 
-`flask --app app init-db`
+`flask --app app init-db` -->
 
-### 7. Run the server
+### 6. Run the server
 
 `flask --app app run --debug`
 

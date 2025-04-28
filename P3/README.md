@@ -25,12 +25,10 @@
 ### 2. Create and activate a virtual environment
 
 On macOS/Linux:
-`python -m venv .venv`
-`. .venv/bin/activate`
+`python -m venv .venv` and `. .venv/bin/activate`
 
 On Windows:
-`python -m venv venv`
-`venv\Scripts\activate`
+`python -m venv venv` and `venv\Scripts\activate`
 
 ### 3. Install dependencies 
 

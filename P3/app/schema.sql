@@ -39,7 +39,7 @@ CREATE TABLE Locations (
     zip INTEGER NOT NULL
 );
 
-CREATE TABLE Zip_City(
+CREATE TABLE Zip_City (
     zip INTEGER PRIMARY KEY,
     city VARCHAR(50) NOT NULL,
     FOREIGN KEY (zip) REFERENCES Locations(zip)
@@ -71,7 +71,9 @@ CREATE TABLE Users (
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     date_of_birth DATE NOT NULL,
-    gender VARCHAR(10)
+    gender VARCHAR(10),
+    password TEXT NOT NULL,
+    sessionID TEXT
 );
 
 CREATE TABLE Photos (

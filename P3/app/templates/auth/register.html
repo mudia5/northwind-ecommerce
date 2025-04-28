@@ -6,8 +6,20 @@
 
 {% block content %}
   <form method="post">
-    <label for="user_id">User ID (5 alphabetical characters)</label>
+    <label for="user_id">User ID (5 numerical characters)</label>
     <input name="user_id" required>
+    <label for="first_name">First name</label>
+    <input name="first_name" required>
+    <label for="middle_initial">Middle initial (optional)</label>
+    <input name="middle_initial">
+    <label for="last_name">Last name</label>
+    <input name="last_name" required>
+    <label for="email">Email address</label>
+    <input name="email" required>
+    <label for="birth_date">Date of birth (e.g. 2000-01-01)</label>
+    <input name="birth_date" required>
+    <label for="gender">Gender (e.g. Male, optional)</label>
+    <input name="gender">
     <label for="password">Password</label>
     <input type="password" name="password" required>
     <input type="submit" value="Register">

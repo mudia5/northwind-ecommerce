@@ -3,6 +3,10 @@
 {% block content %}
   <p>Welcome to the Boston Area Activities Website!<br></p>
   <p>Here you can join groups, register for events, and meet new people.<br></p>
-  <p>We offer all kinds of activities like soccer, ceramics, cooking, book club, and more.<br></p>
-  <p>You may log in at any time, however, you must log in to join a group, register, and more.</p>
+  <p>We offer all kinds of <a href="{{ url_for('browse.categories') }}">activities</a></li>.<br></p>
+  <p>You may log in at any time, however, you must register/log in to join a group or event.</p>
+  <p>Click any of the links below to begin</p>
+  <ul>
+    <li><a href="{{ url_for('browse.groups') }}">Groups</a></li>
+    <li><a href="{{ url_for('browse.events') }}">Events</a></li>
 {% endblock %}

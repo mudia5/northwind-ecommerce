@@ -29,27 +29,50 @@ def assign_session_id() -> None:
 def register() -> Union[str, Response, Tuple[Response, int]]:
     """Register a new user"""
     if request.method == 'POST':
-        user_id = request.form.get('user_id', '').strip().upper()
+        user_id = request.form.get('user_id', '').strip()
+        first_name = request.form.get('first_name', '').strip()
+        middle_initial = request.form.get('middle_initial', '').strip()
+        last_name = request.form.get('last_name', '').strip()
+        email = request.form.get('email', '').strip()
+        birth_date = request.form.get('birth_date', '').strip()
+        gender = request.form.get('gender', '').strip()
         password = request.form.get('password', '').strip()
         db = get_db()
         error = None
 
+        if not middle_initial:
+            middle_initial = 'N/A'
+        if not gender:
+            gender = 'N/A'
+
         print(f"DEBUG: Register attempt with user_id={user_id}, password={password}")
 
         if not user_id:
-            return jsonify({'error': 'Username is required.'}), 400
+            return jsonify({'error': 'User ID is required.'}), 400
         elif len(user_id) < 5:
-            return jsonify({'error': 'Username is not long enough.'}), 400
+            return jsonify({'error': 'User ID is not long enough.'}), 400
         elif len(user_id) > 5:
-            return jsonify({'error': 'Username is too long.'}), 400
+            return jsonify({'error': 'User ID is too long.'}), 400
         elif not password:
             return jsonify({'error': 'Password is required.'}), 400
+        elif not first_name:
+            return jsonify({'error': 'First name is required.'}), 400
+        elif not last_name:
+            return jsonify({'error': 'Last name is required.'}), 400
+        elif not email:
+            return jsonify({'error': 'Email is required.'}), 400
+        elif not birth_date:
+            return jsonify({'error': 'Birth date is required.'}), 400
 
         try:
-            db.execute("INSERT INTO Customers (CustomerID) VALUES (?)", (user_id,))
-            db.commit()
-            db.execute("INSERT INTO Authentication (userID, password, sessionID) VALUES (?, ?, ?)",
-                       (user_id, generate_password_hash(password), session.get('session_id')))
+            db.execute("""
+                       INSERT INTO Users (user_id, first_name, middle_initial, last_name, email,
+                       date_of_birth, gender, password, sessionID)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                       """,
+                       (user_id, first_name, middle_initial, last_name,
+                        email, birth_date, gender, generate_password_hash(password),
+                        session.get('session_id')))
             db.commit()
         except db.IntegrityError:
             error = f'User {user_id} is already registered.'
@@ -70,12 +93,12 @@ def login() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
         password = request.form.get('password', '').strip()
         db = get_db()
         error = None
-        user = db.execute("SELECT * FROM Authentication WHERE userID = ?", (user_id,)).fetchone()
+        user = db.execute("SELECT * FROM Users WHERE user_id = ?", (user_id,)).fetchone()
 
         print(f"DEBUG: Login attempt user_id={user_id}, password={password}")
 
         if user is None:
-            error = 'Incorrect username.'
+            error = 'Incorrect user ID.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
@@ -87,7 +110,9 @@ def login() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
             return render_template('auth/login.html'), 400
 
         session.clear()
-        session['user_id'] = user['userID']
+        session['user_id'] = user['user_id']
+        session['first_name'] = user['first_name']
+        session['last_name'] = user['last_name']
         session['session_id'] = user['sessionID']
 
         print(f"DEBUG: Login successful for {user_id}, redirecting to /")
@@ -106,7 +131,7 @@ def load_logged_in_user() -> None:
     else:
         g.user = get_db().execute(
             """
-            SELECT * FROM Authentication WHERE userID = ?
+            SELECT * FROM Users WHERE user_id = ?
             """,
             (user_id,)
         ).fetchone()

@@ -1,8 +1,9 @@
 """Browse module for information pages."""
 
 import sqlite3
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, g
 from app.db import get_db
+from app.auth import login_required
 
 
 bp = Blueprint('browse', __name__)
@@ -11,7 +12,10 @@ bp = Blueprint('browse', __name__)
 @bp.route('/')
 def index() -> str:
     """Render the index page"""
-    return render_template('browse/index.html')
+    user_id = None
+    if g.user:
+        user_id = g.user
+    return render_template('browse/index.html', user_id=user_id)
 
 
 @bp.route('/groups')
@@ -69,3 +73,29 @@ def locations() -> str:
         """
     ).fetchall()
     return render_template('browse/locations.html', locations=locations_data)
+
+
+@bp.route('/mypage')
+@login_required
+def mypage() -> str:
+    """Render the my account page"""
+    db: sqlite3.Connection = get_db()
+    user_id = g.user['user_id']
+    groups_data = db.execute(
+        """
+        SELECT * 
+        FROM Membership 
+        WHERE user_id = ? 
+        """,
+        (user_id,)
+    ).fetchall()
+    events_data = db.execute(
+        """
+        SELECT *
+        FROM Attending NATURAL JOIN Events
+        WHERE user_id = ?
+        """,
+        (user_id,)
+    ).fetchall()
+    return render_template('browse/mypage.html', groups=groups_data, events=events_data,
+                           user_id=user_id)

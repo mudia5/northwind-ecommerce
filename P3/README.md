@@ -22,29 +22,47 @@
 
 `git clone https://github.com/mudia5/northwind-ecommerce.git`
 
+`cd northwind-ecommerce/`
+
+<br>
+
 ### 2. Create and activate a virtual environment
 
 On macOS/Linux:
-`python -m venv .venv` and `. .venv/bin/activate`
+
+
+`python3 -m venv .venv`
+
+`. .venv/bin/activate`
 
 On Windows:
-`python -m venv venv` and `venv\Scripts\activate`
+
+
+`python3 -m venv venv`
+
+`venv\Scripts\activate`
+
+<br>
 
 ### 3. Install dependencies 
 
-`pip install -r requirements.txt`
+`cd P3/`
+
+`pip3 install -r requirements.txt`
+
+<br>
 
 ### 4. Create a local copy of the Boston Area Activities database
 
-`cd app`
+`cd app/`
 
 `sqlite3 boston_activities.db < schema.sql`
 
-### 5. Populate `boston_actitivies.db` with data
+<br>
 
-`python3 generate_data.py`
+### 5. Populate `boston_activities.db` with data
 
-The deprecation messages may be ignored as they do not affect the output.
+`python3 generate_data.py` // _The deprecation messages may be ignored as they do not affect the output._
 
 `cd ..`
 
@@ -52,9 +70,14 @@ The deprecation messages may be ignored as they do not affect the output.
 
 `flask --app app init-db` -->
 
+<br>
+
+
 ### 6. Run the server
 
 `flask --app app run --debug`
+
+Look for the `Running on http://127.0.0.1:5000` message and visit the printed url in your browser 
 
 <br><br>
 

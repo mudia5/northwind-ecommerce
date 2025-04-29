@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}Reviews{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for r in reviews %}
+    <article class="group">
+        <p class="body"><strong>Author:</strong> {{ r['first_name'] }} {{ r['last_name'] }}</a></p>
+        <p class="body"><strong>Rating (1 to 5):</strong> {{ r['rating'] }}</p>
+        {% if r['comment'] %}
+          <p class="body"><strong>Comment:</strong> {{ r['comment'] }}</p>
+        {% endif %}
+        {% if r['user_id'] == user_id %}
+          <a href="{{ url_for('events.delete_review', review_id=r['review_id']) }}">Delete</a>
+        {% endif %}
+    </article>
+    {% if not loop.last %}
+        <hr>
+    {% endif %}
+  {% endfor %}
+  <br>
+  <a class="action" href="{{ url_for('browse.events') }}">Go back</a>
+{% endblock %}

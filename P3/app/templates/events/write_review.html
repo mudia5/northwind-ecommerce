@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}Write a review{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="rating">Rating</label>
+    <input name="rating" required>
+    <label for="comment">Comment (optional)</label>
+    <input name="comment">
+    <input type="submit" value="review">
+  </form>
+  <a class="action" href="{{ url_for('events.see_review', event_id=event_id) }}">Go back</a>
+{% endblock %}

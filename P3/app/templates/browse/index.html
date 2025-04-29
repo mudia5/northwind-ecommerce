@@ -9,4 +9,7 @@
   <ul>
     <li><a href="{{ url_for('browse.groups') }}">Groups</a></li>
     <li><a href="{{ url_for('browse.events') }}">Events</a></li>
+    {% if user_id %}
+      <li><a href="{{ url_for('browse.mypage') }}">My Account</a></li>
+    {% endif %}
 {% endblock %}

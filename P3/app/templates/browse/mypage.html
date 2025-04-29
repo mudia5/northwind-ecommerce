@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}My Account Page{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<article class="group">
+    <header>
+        <div>
+            <h1>
+                My Groups
+            </h1>
+        </div>
+    </header>
+    {% for g in groups %}
+        {% if g['user_id'] == user_id %}
+            <p class="body">{{ g['group_name'] }}</p>
+            <a href="{{ url_for('groups.drop', group_name=g['group_name']) }}">Drop</a>
+        {% endif %}
+        <hr>
+    {% endfor %}
+    <header>
+        <div>
+            <h1>
+                My Events
+            </h1>
+        </div>
+    </header>
+    {% for e in events %}
+        {% if e['user_id'] == user_id %}
+            <p class="body">{{ e['location_name'] }}, {{ e['time_of_day'] }}</p>
+            <a href="{{ url_for('events.drop', event_id=e['event_id']) }}">Drop</a>
+        {% endif %}
+        <hr>
+    {% endfor %}
+</article>
+<br>
+<a class="action" href="{{ url_for('index') }}">Go back</a>
+{% endblock %}

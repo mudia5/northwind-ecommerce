@@ -6,9 +6,7 @@ import sqlite3
 import os
 from flask import Flask
 
-from . import db
-from . import auth
-from . import browse
+from . import db, auth, browse, events, groups
 
 BASE_DIR: str = os.path.abspath(os.path.dirname(__file__))
 DB_PATH: str = os.path.join(BASE_DIR, 'boston_activities.db')
@@ -54,5 +52,7 @@ def create_app(test_config=None) -> Flask:
     db.init_app(app)
     app.register_blueprint(auth.bp)
     app.register_blueprint(browse.bp)
+    app.register_blueprint(events.bp)
+    app.register_blueprint(groups.bp)
     app.add_url_rule('/', endpoint='index')
     return app

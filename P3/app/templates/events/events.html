@@ -14,6 +14,9 @@
             <p class="body"><strong>Maximum attendees:</strong> {{ e['max_attendees'] }}</p>
         {% endif %}
         <p class="body"><strong>Current number of attendees:</strong> {{ e['current_attendees_count'] }}</p>
+        {% if e['current_attendees_count'] < e['max_attendees'] %}
+          <a href="{{ url_for('events.signup', event_id=e['event_id']) }}">Sign up</a>
+        {% endif %}
         {% for a in attendees %}
             {% if a['event_id'] == e['event_id'] %}
                 <p class="body attendee">{{ a['first_name'] }} {{ a['last_name'] }}, {{ a['email'] }}</p>

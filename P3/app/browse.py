@@ -1,16 +1,8 @@
 """Browse module for information pages."""
 
-from datetime import datetime, timezone
-from typing import Union
 import sqlite3
-
-from flask import (
-    Blueprint, flash, redirect, render_template, request, session, url_for
-)
-from werkzeug.wrappers import Response
-
+from flask import Blueprint, render_template
 from app.db import get_db
-from app.auth import login_required
 
 
 bp = Blueprint('browse', __name__)
@@ -19,7 +11,7 @@ bp = Blueprint('browse', __name__)
 @bp.route('/')
 def index() -> str:
     """Render the index page"""
-    return render_template('index.html')
+    return render_template('browse/index.html')
 
 
 @bp.route('/groups')
@@ -31,7 +23,7 @@ def groups() -> str:
         SELECT * FROM Groups
         """
     ).fetchall()
-    return render_template('groups.html', groups=groups_data)
+    return render_template('groups/groups.html', groups=groups_data)
 
 
 @bp.route('/categories')
@@ -43,7 +35,7 @@ def categories() -> str:
         SELECT * FROM Categories
         """
     ).fetchall()
-    return render_template('categories.html', categories=categories_data)
+    return render_template('browse/categories.html', categories=categories_data)
 
 
 @bp.route('/events')
@@ -63,7 +55,7 @@ def events() -> str:
         WHERE U.user_id = A.user_id
         """
     ).fetchall()
-    return render_template('events.html', events=events_data, attendees=attendees)
+    return render_template('events/events.html', events=events_data, attendees=attendees)
 
 
 @bp.route('/locations')
@@ -76,4 +68,4 @@ def locations() -> str:
         FROM Locations NATURAL JOIN Zip_City
         """
     ).fetchall()
-    return render_template('locations.html', locations=locations_data)
+    return render_template('browse/locations.html', locations=locations_data)

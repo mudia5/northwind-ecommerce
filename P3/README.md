@@ -1,4 +1,8 @@
-# Project 1: Online Commerce 
+# Project 3: A Real-World Database Application
+
+This real-world database application offers **residents of the Boston area** a centralized platform to discover and engage with **local activity groups**. Users can browse groups by name or category, join communities, register for events, and even create and manage their own groups. The goal is to make it easier for individuals to connect with like-minded people and get involved in local activities through organized and reliable information.
+
+<br>
 
 ## The Databasers Team
 **Team Lead:** Osamudiamen (Mudia) Eastwood - mudia5
@@ -16,7 +20,7 @@
 
 
 
-## Set Up
+## Deploying the Application 
 
 ### 1. Clone this repository 
 
@@ -38,9 +42,11 @@ On macOS/Linux:
 On Windows:
 
 
-`python3 -m venv venv`
+`python -m venv .venv`
 
-`venv\Scripts\activate`
+`attrib +h .venv`
+
+`.venv\Scripts\Activate.ps1`
 
 <br>
 
@@ -106,3 +112,5 @@ Look for the `Running on http://127.0.0.1:5000` message and visit the printed ur
 We followed a **Test-Last (Traditional) approach**, where the code was implemented first and tests were written afterward to validate functionality, allowing us to iterate quickly during development. We focused on **unit testing**, where we validated individual functions in isolation. We structured our tests by writing a dedicated test file for each application module, systematically testing each function one by one. To maximize coverage, we wrote additional tests and incorporated parameterized testing to ensure each branch within a function was called. Since some functions involved database interactions and session management, many of these unit tests also served as **integration tests**, verifying that components such as database queries, authentication, and session handling worked together correctly. We used pytest and Flask’s test client to automate our testing process. By combining these approaches, we achieved a **comprehensive test coverage of 92%**, validating both individual functions and cross-component interactions to ensure the reliability of our application.
 
 ### Description of tests 
+
+## Special Features

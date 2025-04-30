@@ -22,7 +22,9 @@ def index() -> str:
 def groups(category) -> str:
     """Render the groups page"""
     db: sqlite3.Connection = get_db()
-    user_id = g.user['user_id']
+    user_id = None
+    if g.user:
+        user_id = g.user['user_id']
     if category == 'all':
         groups_data = db.execute(
             """

@@ -1,6 +1,7 @@
 """Events module for information and registration."""
 
 import sqlite3
+from datetime import datetime
 from typing import Union, Tuple
 from flask import Blueprint, g, redirect, url_for, flash, request, render_template
 from werkzeug.wrappers import Response
@@ -50,7 +51,7 @@ def see_review(event_id: int) -> str:
     """See the reviews on an event"""
     db: sqlite3.Connection = get_db()
     user_id = None
-    if g.user['user_id']:
+    if g.user:
         user_id = g.user['user_id']
     reviews = db.execute(
         """
@@ -116,19 +117,21 @@ def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
         location = request.form.get('location', '').strip()
         time = request.form.get('time', '').strip()
         max_attendees = request.form.get('max_attendees', '').strip()
-        if not location:
-            flash('Location is required.')
-        if not time:
-            flash('Time is required.')
         if not max_attendees:
             max_attendees = '1000'
         db: sqlite3.Connection = get_db()
+        try:
+            parsed_time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            flash("Invalid datetime format. Please use YYYY-MM-DD HH:MM:SS.")
+            return redirect(url_for('events.create'))
+        datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
         db.execute(
-            """
-            INSERT INTO Events (location_name, time_of_day, max_attendees, current_attendees_count)
-            VALUES (?, ?, ?, ?)
-            """,
-            (location, time, max_attendees, 0)
+        """
+        INSERT INTO Events (location_name, time_of_day, max_attendees, current_attendees_count)
+        VALUES (?, ?, ?, ?)
+        """,
+        (location, time, max_attendees, 0)
         )
         db.commit()
         return redirect(url_for('browse.events'))

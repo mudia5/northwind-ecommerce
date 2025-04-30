@@ -26,5 +26,6 @@ def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
             """,
             (name, description)
         )
+        db.commit()
         return redirect(url_for('browse.categories'))
     return render_template('categories/create.html')

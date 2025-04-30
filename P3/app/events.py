@@ -3,9 +3,9 @@
 import sqlite3
 from typing import Union, Tuple
 from flask import Blueprint, g, redirect, url_for, flash, request, render_template
+from werkzeug.wrappers import Response
 from app.db import get_db
 from app.auth import login_required
-from werkzeug.wrappers import Response
 
 
 bp = Blueprint('events', __name__)
@@ -27,7 +27,7 @@ def signup(event_id: int) -> Response:
         db.commit()
     except sqlite3.IntegrityError:
         flash('You are already signed up for this event.')
-    return redirect(url_for('browse.events'))
+    return redirect(url_for('browse.mypage'))
 
 
 @bp.route('/events/<int:event_id>/drop')
@@ -106,3 +106,30 @@ def delete_review(review_id: int) -> Response:
     )
     db.commit()
     return redirect(url_for('events.see_review', event_id=review['event_id']))
+
+
+@bp.route('/events/create', methods=('GET', 'POST'))
+@login_required
+def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
+    """Create an event"""
+    if request.method == 'POST':
+        location = request.form.get('location', '').strip()
+        time = request.form.get('time', '').strip()
+        max_attendees = request.form.get('max_attendees', '').strip()
+        if not location:
+            flash('Location is required.')
+        if not time:
+            flash('Time is required.')
+        if not max_attendees:
+            max_attendees = '1000'
+        db: sqlite3.Connection = get_db()
+        db.execute(
+            """
+            INSERT INTO Events (location_name, time_of_day, max_attendees, current_attendees_count)
+            VALUES (?, ?, ?, ?)
+            """,
+            (location, time, max_attendees, 0)
+        )
+        db.commit()
+        return redirect(url_for('browse.events'))
+    return render_template('events/create.html')

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}Add a location{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Location name</label>
+    <input name="name" required>
+    <label for="street_num">Street number</label>
+    <input name="street_num" required>
+    <label for="street_name">Street name</label>
+    <input name="street_name" required>
+    <label for="city">City</label>
+    <input name="city" required>
+    <label for="zip">Zip code</label>
+    <input name="zip" required>
+    <input type="submit" value="Add">
+  </form>
+  <a class="action" href="{{ url_for('browse.locations') }}">Go back</a>
+{% endblock %}

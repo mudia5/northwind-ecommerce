@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}Create a category{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Category name</label>
+    <input name="name" required>
+    <label for="description">Description</label>
+    <input name="description" required>
+    <input type="submit" value="Create">
+  </form>
+  <a class="action" href="{{ url_for('index') }}">Go back</a>
+{% endblock %}

@@ -1,25 +1,27 @@
 {% extends "base.html" %}
 
 {% block header %}
-  <h1>{% block title %}Categories{% endblock %}</h1>
+  <h1>{% block title %}Locations{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  {% for c in categories %}
-    <article class="category">
+  {% for l in locations %}
+    <article class="location">
         <header>
             <div>
                 <h1>
-                    {{ c['category_name'] }}
+                    {{ l['location_name'] }}
                 </h1>
             </div>
         </header>
-    <p class="body">Description: {{ c['category_description'] }}</p>
+    <p class="body">{{ l['street_number'] }} {{ l['street_name'] }}, {{ l['city'] }}, {{ l['zip'] }}</p>
     </article>
     {% if not loop.last %}
-    <hr>
+        <hr>
     {% endif %}
   {% endfor %}
+  <br>
+  <a href="{{ url_for('locations.add') }}">Add a location</a>
   <br>
   <a class="action" href="{{ url_for('index') }}">Go back</a>
 {% endblock %}

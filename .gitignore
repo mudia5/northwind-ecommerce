@@ -173,3 +173,4 @@ cython_debug/
 .DS_Store
 northwind.db
 .vscode/
+P3/app/boston_activities.db

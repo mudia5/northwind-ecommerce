@@ -22,7 +22,7 @@ CREATE TABLE Groups (
     website_url TEXT,
     min_age INTEGER CHECK (min_age > 0),
     max_age INTEGER CHECK (max_age > 0),
-    sign_up_price INTEGER CHECK (sign_up_price > 0),
+    sign_up_price INTEGER CHECK (sign_up_price >= 0),
     is_active BOOLEAN DEFAULT TRUE,
     register_date DATE
 );

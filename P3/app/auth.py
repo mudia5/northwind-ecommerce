@@ -34,6 +34,7 @@ def register() -> Union[str, Response, Tuple[Response, int]]:
         middle_initial = request.form.get('middle_initial', '').strip()
         last_name = request.form.get('last_name', '').strip()
         email = request.form.get('email', '').strip()
+        number = request.form.get('number', '').strip()
         birth_date = request.form.get('birth_date', '').strip()
         gender = request.form.get('gender', '').strip()
         password = request.form.get('password', '').strip()
@@ -47,22 +48,10 @@ def register() -> Union[str, Response, Tuple[Response, int]]:
 
         print(f"DEBUG: Register attempt with user_id={user_id}, password={password}")
 
-        if not user_id:
-            return jsonify({'error': 'User ID is required.'}), 400
-        elif len(user_id) < 5:
+        if len(user_id) < 5:
             return jsonify({'error': 'User ID is not long enough.'}), 400
         elif len(user_id) > 5:
             return jsonify({'error': 'User ID is too long.'}), 400
-        elif not password:
-            return jsonify({'error': 'Password is required.'}), 400
-        elif not first_name:
-            return jsonify({'error': 'First name is required.'}), 400
-        elif not last_name:
-            return jsonify({'error': 'Last name is required.'}), 400
-        elif not email:
-            return jsonify({'error': 'Email is required.'}), 400
-        elif not birth_date:
-            return jsonify({'error': 'Birth date is required.'}), 400
 
         try:
             db.execute("""
@@ -72,7 +61,14 @@ def register() -> Union[str, Response, Tuple[Response, int]]:
                        """,
                        (user_id, first_name, middle_initial, last_name,
                         email, birth_date, gender, generate_password_hash(password),
-                        session.get('session_id')))
+                        session.get('session_id'))
+                       )
+            db.execute("""
+                       INSERT INTO User_Phone (user_id, phone_number)
+                       VALUES (?, ?)
+                       """,
+                       (user_id, number)
+                       )
             db.commit()
         except db.IntegrityError:
             error = f'User {user_id} is already registered.'

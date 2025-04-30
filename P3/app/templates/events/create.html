@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}Create an event{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="location">Location</label>
+    <input name="location" required>
+    <label for="time">Time of day (e.g. 2000-01-01 12:00:00)</label>
+    <input name="time" required>
+    <label for="max_attendees">Maximum number of attendees (optional)</label>
+    <input name="max_attendees">
+    <input type="submit" value="Create">
+  </form>
+  <a class="action" href="{{ url_for('index') }}">Go back</a>
+{% endblock %}

@@ -68,6 +68,13 @@ def leave(group_name: str) -> Response:
 @login_required
 def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
     """Create a group"""
+    db: sqlite3.Connection = get_db()
+    categories = db.execute(
+        """
+        SELECT category_name
+        FROM Categories
+        """,
+    ).fetchall()
     if request.method == 'POST':
         group_name = request.form.get('name', '').strip()
         category = request.form.get('category', '').strip()
@@ -86,7 +93,6 @@ def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
         if not sign_up_price:
             sign_up_price = '0'
         curr_time = datetime.now(timezone.utc).strftime(r'%Y-%m-%d')
-        db: sqlite3.Connection = get_db()
         try:
             db.execute(
                 """
@@ -113,6 +119,6 @@ def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
             )
             db.commit()
         except sqlite3.IntegrityError:
-            flash('User does not meet the age requirement for this group.')
+            flash('Error creating group, try again following the style of the existing groups.')
         return redirect(url_for('browse.groups', category='all'))
-    return render_template('groups/create.html')
+    return render_template('groups/create.html', categories=categories)

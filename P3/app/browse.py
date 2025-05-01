@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, g, request, redirect, url_for
 from werkzeug.wrappers import Response
 from werkzeug.security import generate_password_hash
 from app.db import get_db
+from app.events import remove_expired_events
 from app.auth import login_required
 
 
@@ -49,8 +50,14 @@ def groups(category) -> str:
             """,
             (user_id,)
         ).fetchall()
+    hosts_data = db.execute(
+            """
+            SELECT group_name, event_name, time_of_day
+            FROM Hosts NATURAL JOIN Events
+            """,
+        ).fetchall()
     return render_template('groups/groups.html', groups=groups_data, user_data=user_data,
-                           user_id=user_id)
+                           hosts=hosts_data, user_id=user_id)
 
 
 @bp.route('/categories')
@@ -68,11 +75,12 @@ def categories() -> str:
 @bp.route('/events')
 def events() -> str:
     """Render the events page"""
+    remove_expired_events()
     db: sqlite3.Connection = get_db()
     events_data = db.execute(
         """
         SELECT *
-        FROM Events
+        FROM Hosts NATURAL JOIN Events
         """
     ).fetchall()
     attendees = db.execute(

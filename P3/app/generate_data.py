@@ -132,17 +132,19 @@ def generate_zipcity(c: sqlite3.Cursor) -> None:
 def generate_events(c: sqlite3.Cursor) -> None:
     """Generate dummy data for the events table"""
     location_names: list[str] = ['Newton Soccer Park', 'Elmwood Tennis Courts']
-    times: list[datetime] = [datetime(2025, 4, 12, 12, 0, 0),
-                             datetime(2025, 4, 13, 16, 0, 0)]
+    event_names: list[str] = ['Soccer Game', 'Tennis Match']
+    times: list[datetime] = [datetime(2025, 6, 12, 12, 0, 0),
+                             datetime(2025, 6, 13, 16, 0, 0)]
     attendees: list[int] = [36, 8]
     curr_att_count: int = 0
-    for i, name in enumerate(location_names):
+    for i, location_name in enumerate(location_names):
         command: str = '''
-                        INSERT INTO [Events] (location_name, time_of_day, max_attendees, current_attendees_count) 
-                        VALUES (?, ?, ?, ?)
+                        INSERT INTO [Events] (location_name, event_name, time_of_day, max_attendees, current_attendees_count) 
+                        VALUES (?, ?, ?, ?, ?)
                         '''
-        params: tuple[str, datetime, int, int] = (
-            name,
+        params: tuple[str, str, datetime, int, int] = (
+            location_name,
+            event_names[i],
             times[i],
             attendees[i],
             curr_att_count

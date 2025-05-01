@@ -8,8 +8,24 @@
   <form method="post">
     <label for="location">Location</label>
     <input name="location" required>
+    <h3>Available locations</h3>
+    <ul>
+      {% for l in locations %}
+        <li>{{ l['location_name'] }}</li>
+      {% endfor %}
+    </ul>
+    <label for="name">Name</label>
+    <input name="name" required>
     <label for="time">Time of day (e.g. 2000-01-01 12:00:00)</label>
     <input name="time" required>
+    <label for="host">Hosting group</label>
+    <input name="host" required>
+    <h3>All groups</h3>
+    <ul>
+      {% for g in groups %}
+        <li>{{ g['group_name'] }}</li>
+      {% endfor %}
+    </ul>
     <label for="max_attendees">Maximum number of attendees (optional)</label>
     <input name="max_attendees">
     <input type="submit" value="Create">

@@ -113,13 +113,27 @@ def delete_review(review_id: int) -> Response:
 @login_required
 def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
     """Create an event"""
+    db: sqlite3.Connection = get_db()
+    locations = db.execute(
+        """
+        SELECT location_name
+        FROM Locations
+        """,
+    ).fetchall()
+    groups = db.execute(
+        """
+        SELECT group_name
+        FROM Groups
+        """,
+    ).fetchall()
     if request.method == 'POST':
         location = request.form.get('location', '').strip()
+        name = request.form.get('name', '').strip()
         time = request.form.get('time', '').strip()
+        host = request.form.get('host', '').strip()
         max_attendees = request.form.get('max_attendees', '').strip()
         if not max_attendees:
             max_attendees = '1000'
-        db: sqlite3.Connection = get_db()
         try:
             parsed_time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
         except ValueError:
@@ -128,11 +142,42 @@ def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
         datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
         db.execute(
         """
-        INSERT INTO Events (location_name, time_of_day, max_attendees, current_attendees_count)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Events (location_name, event_name, time_of_day, max_attendees,
+        current_attendees_count)
+        VALUES (?, ?, ?, ?, ?)
         """,
-        (location, time, max_attendees, 0)
+        (location, name, time, max_attendees, 0)
+        )
+        db.commit()
+        event = db.execute(
+            """
+            SELECT event_id
+            FROM Events
+            WHERE location_name = ? AND event_name = ? AND time_of_day = ?
+            """,
+            (location, name, time)
+        ).fetchone()
+        db.execute(
+        """
+        INSERT INTO Hosts (group_name, event_id)
+        VALUES (?, ?)
+        """,
+        (host, event['event_id'])
         )
         db.commit()
         return redirect(url_for('browse.events'))
-    return render_template('events/create.html')
+    return render_template('events/create.html', groups=groups, locations=locations)
+
+
+def remove_expired_events() -> Response:
+    """Remove old events"""
+    db: sqlite3.Connection = get_db()
+    db.execute(
+        """
+        DELETE FROM Events
+        WHERE time_of_day < ?
+        """,
+        (datetime.now(),)
+        )
+    db.commit()
+    return redirect(url_for('browse.events'))

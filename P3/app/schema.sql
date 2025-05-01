@@ -47,6 +47,7 @@ CREATE TABLE Zip_City (
 
 CREATE TABLE Events (
     event_id INTEGER PRIMARY KEY,
+    event_name VARCHAR(100) NOT NULL,
     location_name VARCHAR(100) NOT NULL,
     time_of_day TIMESTAMP NOT NULL,
     max_attendees INTEGER CHECK (max_attendees > 0),

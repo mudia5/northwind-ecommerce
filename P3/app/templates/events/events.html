@@ -9,7 +9,9 @@
     <article class="group">
         <p class="body"><strong>Location:</strong> <a href="{{ url_for('browse.locations') }}">
             {{ e['location_name'] }}</a></p>
+        <p class="body"><strong>Name:</strong> {{ e['event_name'] }}</p>
         <p class="body"><strong>Time:</strong> {{ e['time_of_day'] }}</p>
+        <p class="body"><strong>Host:</strong> {{ e['group_name'] }}</p>
         {% if e['max_attendees'] %}
             <p class="body"><strong>Maximum attendees:</strong> {{ e['max_attendees'] }}</p>
         {% endif %}

@@ -10,6 +10,12 @@
     <input name="name" required>
     <label for="category">Category</label>
     <input name="category" required>
+    <h3>Available categories</h3>
+    <ul>
+      {% for c in categories %}
+        <li>{{ c['category_name'] }}</li>
+      {% endfor %}
+    </ul>
     <label for="description">Description</label>
     <input name="description" required>
     <label for="email">Contact email</label>

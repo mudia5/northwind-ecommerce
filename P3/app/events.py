@@ -73,6 +73,8 @@ def write_review(event_id: int) -> Union[str, Response, Tuple[Response, int], Tu
         comment = request.form.get('comment', '').strip()
         if not comment:
             comment = 'N/A'
+        if int(rating) < 1 or int(rating) > 5:
+            error = 'Rating must be between 1 and 5'
         db: sqlite3.Connection = get_db()
         db.execute(
             """
@@ -82,6 +84,8 @@ def write_review(event_id: int) -> Union[str, Response, Tuple[Response, int], Tu
             (g.user['user_id'], event_id, rating, comment)
         )
         db.commit()
+        if error is not None:
+            flash(error)
         return redirect(url_for('events.see_review', event_id=event_id))
     return render_template('events/write_review.html', event_id=event_id)
 
@@ -132,6 +136,8 @@ def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
         time = request.form.get('time', '').strip()
         host = request.form.get('host', '').strip()
         max_attendees = request.form.get('max_attendees', '').strip()
+        if time < datetime.now().strftime('%Y-%m-%d %H:%M:%S'):
+            flash("Event time must be in the future.")
         if not max_attendees:
             max_attendees = '1000'
         try:
@@ -172,12 +178,30 @@ def create() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
 def remove_expired_events() -> Response:
     """Remove old events"""
     db: sqlite3.Connection = get_db()
+    expired = db.execute(
+        """
+        SELECT *
+        FROM Events NATURAL JOIN Hosts
+        WHERE time_of_day < ?
+        """,
+        (datetime.now(),)
+        )
     db.execute(
         """
         DELETE FROM Events
         WHERE time_of_day < ?
         """,
         (datetime.now(),)
+        )
+    for row in expired:
+        name = row['group_name']
+        event = row['event_id']
+        db.execute(
+        """
+        DELETE FROM Hosts
+        WHERE group_name < ? and event_id = ?
+        """,
+        (name, event)
         )
     db.commit()
     return redirect(url_for('browse.events'))

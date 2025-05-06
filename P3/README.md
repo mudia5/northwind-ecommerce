@@ -136,11 +136,9 @@ Similar to Project 1, we followed a **Test-Last (Traditional) approach**, where 
 - `test_delete_nonexistent_review(client, app)` tests deletion of a non-existent review and expects a TypeError, verifying error handling for missing reviews.
 - `test_create_event_invalid_time_format(client, app)` attempts to create an event with an invalid time string and confirms the error message is rendered.
 - `test_create_event_past_time(client, app)` ensures that creating an event with a time in the past is blocked and an appropriate error message is shown.
-- `test_remove_expired_events_runs(client, app)` confirms that past events are removed. 
-
-
-
+- `test_remove_expired_events_runs(client, app)` confirms that past events are removed.
 <br/><br/>
+
 **`test_generate_data.py`** verifies the data generation script for populating the database with synthetic data. 
 - `test_generate_groups_raises_operational_error()` confirms that generate_groups raises an OperationalError if the cursor fails.
 - `test_main_runs_without_crash(tmp_path)` verifies that the full `main()` function in `generate_data.py` runs without errors and correctly initializes the database with required tables.
@@ -180,3 +178,16 @@ Similar to Project 1, we followed a **Test-Last (Traditional) approach**, where 
 
 
 ## Special Features
+
+### Events
+In addition to supporting activity groups across the Boston area, our application offers functionality for **managing local events** hosted by those groups. Users can browse upcoming events, register to attend, host their own, and even leave reviews. Event sign-ups are tracked in real time, and integrity constraints ensure that attendance never exceeds the maximum capacity specified by the event host. In doing so, our platform provides **a centralized hub** for any and all information Boston residents might need to engage with local communities and events. 
+
+### Authentication
+Our application includes a user authentication system that allows individuals to register accounts and **access personalized features**. Logged-in users can manage their group memberships and event registrations, create events, submit reviews, and access pages restricted to authenticated users. If an unauthenticated user attempts to access the create event or create group forms, they are redirected to the login page, ensuring secure and appropriate **access control**.
+
+### Error Handling
+To maintain the consistency and reliability of the data, we implemented extensive integrity constraints in the Project 2 database design, particularly NOT NULL and CHECK constraints. In the web application, we built on this foundation by incorporating front-end and back-end error handling to **prevent system crashes** and instead provide **informative feedback** to users. For example, the event creation form displays clear error messages when an invalid date is submitted (e.g., a past date or incorrect format), and the review submission form warns users if a rating falls outside the valid 1–5 range. Furthermore, forms cannot be submitted if the required fields are blank. 
+
+### Flexibility
+We intentionally designed our forms to be **flexible** and **user-friendly**. Many input fields are optional, allowing for greater customization and ease of use. Event hosts may choose whether to set a maximum attendee limit, group creators can optionally define age restrictions, and users can submit ratings with or without accompanying comments. 
+

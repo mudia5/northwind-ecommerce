@@ -71,22 +71,26 @@ def write_review(event_id: int) -> Union[str, Response, Tuple[Response, int], Tu
     if request.method == 'POST':
         rating = request.form.get('rating', '').strip()
         comment = request.form.get('comment', '').strip()
+        error = None
         if not comment:
             comment = 'N/A'
         if int(rating) < 1 or int(rating) > 5:
             error = 'Rating must be between 1 and 5'
-        db: sqlite3.Connection = get_db()
-        db.execute(
-            """
-            INSERT INTO Review (user_id, event_id, rating, comment)
-            VALUES (?, ?, ?, ?)
-            """,
-            (g.user['user_id'], event_id, rating, comment)
-        )
-        db.commit()
+            print(error)
         if error is not None:
             flash(error)
-        return redirect(url_for('events.see_review', event_id=event_id))
+            return redirect(url_for('events.write_review', event_id=event_id))
+        else:
+            db: sqlite3.Connection = get_db()
+            db.execute(
+                """
+                INSERT INTO Review (user_id, event_id, rating, comment)
+                VALUES (?, ?, ?, ?)
+                """,
+                (g.user['user_id'], event_id, rating, comment)
+            )
+            db.commit()
+            return redirect(url_for('events.see_review', event_id=event_id))
     return render_template('events/write_review.html', event_id=event_id)
 
 

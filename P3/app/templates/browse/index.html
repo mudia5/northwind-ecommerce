@@ -7,7 +7,8 @@
   <p>You may log in at any time, however, you must register/log in to join a group or event.</p>
   <p>Click any of the links below to begin</p>
   <ul>
-    <li><a href="{{ url_for('browse.groups', category='all') }}">Browse groups</a></li>
+    <li><a href="{{ url_for('browse.categories') }}">Browse groups by category</a></li>
+    <li><a href="{{ url_for('browse.groups', category='all') }}">Browse groups by name</a></li>
     <li><a href="{{ url_for('groups.create') }}">Make a group</a></li>
     <li><a href="{{ url_for('browse.events') }}">Browse events</a></li>
     <li><a href="{{ url_for('events.create') }}">Make an event</a></li>

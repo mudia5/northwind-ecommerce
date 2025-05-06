@@ -115,20 +115,26 @@ def test_delete_review(client, app):
 def test_write_review_invalid_rating(client, app):
     with app.app_context():
         register_and_login(client, app)
-        with pytest.raises(sqlite3.IntegrityError):
-            client.post('/events/1/write_review', data={
-                'rating': '6',
-                'comment': 'Nice'
-            }, follow_redirects=True)
+        response = client.post('/events/1/write_review', data={
+            'rating': '6',  # Invalid rating
+            'comment': 'Nice'
+        }, follow_redirects=True)
+
+        assert response.status_code == 200
+        assert b'Rating must be between 1 and 5' in response.data
 
 def test_write_review_empty_comment(client, app):
     with app.app_context():
         register_and_login(client, app)
-        with pytest.raises(UnboundLocalError):
-            client.post('/events/1/write_review', data={
-                'rating': '5',
-                'comment': ''
-            }, follow_redirects=True)
+        response = client.post('/events/1/write_review', data={
+            'rating': '5',
+            'comment': ''  # Empty comment should become 'N/A'
+        }, follow_redirects=True)
+
+        # Should redirect to see_review page (status 200), not crash
+        assert response.status_code == 200
+        assert b'review' in response.data or b'N/A' in response.data
+
 
 
 def test_delete_nonexistent_review(client, app):

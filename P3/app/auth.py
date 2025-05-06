@@ -76,8 +76,14 @@ def register() -> Union[str, Response, Tuple[Response, int]]:
             return jsonify({'error': error}), 400
 
         print(f"DEBUG: Registration successful for {user_id}, redirecting to login.")
-        return redirect(url_for('auth.login'))
-
+        user = db.execute("SELECT * FROM Users WHERE user_id = ?", (user_id,)).fetchone()
+        next_page = session.pop('next', None)
+        session.clear()
+        session['user_id'] = user['user_id']
+        session['first_name'] = user['first_name']
+        session['last_name'] = user['last_name']
+        session['session_id'] = user['sessionID']
+        return redirect(next_page or url_for('index'))
     return render_template('auth/register.html')
 
 
@@ -105,6 +111,7 @@ def login() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
             flash(error)
             return render_template('auth/login.html'), 400
 
+        next_page = session.pop('next', None)
         session.clear()
         session['user_id'] = user['user_id']
         session['first_name'] = user['first_name']
@@ -113,7 +120,7 @@ def login() -> Union[str, Response, Tuple[Response, int], Tuple[str, int]]:
 
         print(f"DEBUG: Login successful for {user_id}, redirecting to /")
 
-        return redirect(url_for('index'))
+        return redirect(next_page or url_for('index'))
     return render_template('auth/login.html')
 
 
@@ -145,6 +152,7 @@ def login_required(view: Callable[..., Any]) -> Callable[..., Any]:
     @functools.wraps(view)
     def wrapped_view(**kwargs: Any) -> Any:
         if g.user is None:
+            session['next'] = request.url
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)

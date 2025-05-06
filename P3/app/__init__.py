@@ -6,6 +6,7 @@ import sqlite3
 import os
 from flask import Flask
 
+from . import generate_data
 from . import db, auth, browse, events, groups, locations, categories
 
 BASE_DIR: str = os.path.abspath(os.path.dirname(__file__))
@@ -24,7 +25,7 @@ def init_db() -> None:
                 cursor.executescript(schema_sql)
                 print('Database schema updated successfully.')
             print(f'Database {DB_PATH} initialized successfully.')
-            print('Initialized')
+            generate_data.main()
     except sqlite3.DatabaseError as e:
         print(f'Error initializing database: {e}')
 

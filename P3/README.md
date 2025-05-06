@@ -147,13 +147,41 @@ Tries to submit a review with an empty comment and expects an UnboundLocalError,
 
 
 <br/><br/>
-**`test_generate_data.py`**
+**`test_generate_data.py`** verifies the data generation script for populating the database with synthetic data. 
+- `test_generate_groups_raises_operational_error()` confirms that generate_groups raises an OperationalError if the cursor fails.
+- `test_main_runs_without_crash(tmp_path)` verifies that the full `main()` function in `generate_data.py` runs without errors and correctly initializes the database with required tables.
+- `test_generate_groups(db_cursor)` tests that `generate_groups()` correctly populates the **Groups** table with exactly 2 records.
+- `test_generate_categories(db_cursor)` ensures `generate_categories()` populates the **Categories** table with 7 entries.
+- `test_generate_locations(db_cursor)` checks that `generate_locations()` inserts 7 entries into the **Locations** table.
+- `test_generate_zipcity(db_cursor)` verifies `generate_zipcity()` fills the **Zip_City** table with 7 entries.
+- `test_generate_events(db_cursor)` first generates required locations, then confirms `generate_events()` adds 2 entries to the **Events** table.
+- `test_generate_review(db_cursor)` after generating users, locations, and events, checks that `generate_review()` creates 2 review entries.
+- `test_generate_users(db_cursor)` confirms that `generate_users()` inserts 20 user records.
+- `test_generate_userphone(db_cursor)` after generating users, ensures `generate_userphone()` adds 21 phone records (some users may have multiple).
+- `test_generate_belongs(db_cursor)` verifies that `generate_belongs()` inserts 2 records linking groups to categories.
+- `test_generate_membership(db_cursor)` ensures that `generate_membership()` links users to groups with 21 records in the **Membership** table.
+- `test_generate_attending(db_cursor)` checks that `generate_attending()` inserts 21 event attendance records.
+- `test_generate_hosts(db_cursor)`confirms that `generate_hosts()` creates 2 valid host relationships between groups and events.
+- `test_all_generators_with_mock_cursor()` runs all generator functions using a mocked cursor to verify that each function executes without raising unexpected errors.
 <br/><br/>
-**`test_groups.py`**
+
+**`test_groups.py`** validates  group-related functionality, including group creation, joining/leaving a group, and handling duplicate signups. 
+- `test_create_group(client, app)` verifies that a logged-in user can successfully create a group.
+- `test_signup_and_leave_group(client, app)` tests that a user can sign up for a group and then leave it.
+- `test_signup_twice(client, app)` checks that a second attempt to join the same group returns an error message. 
 <br/><br/>
-**`test_init.py`**
+
+**`test_init.py`** verifies the setup and configuration of the Flask application.
+- `test_create_app_default_config()` checks that the app initializes correctly with default settings.
+- `test_create_app_test_config()` verifies that the app correctly loads a test configuration (TESTING=True) while preserving default config values. 
+- `test_instance_folder_creation(monkeypatch, tmp_path)` ensures that the application can be initialized with a custom instance path, and that folder creation logic does not raise errors. 
+- `test_init_db_creates_schema(tmp_path, monkeypatch)` mocks a schema file and a database path, then confirms that init_db() correctly creates the expected schema table.
+- `test_init_db_command(runner)` runs the init-db command and asserts that it completes successfully with the expected confirmation message.
 <br/><br/>
-**`test_locations.py`**
+
+**`test_locations.py`** verifies the functionality of adding new locations by authenticated users. 
+- `test_get_add_location_form(client, app)` verifies that a logged-in user can access the "Add Location" form with the expected fields. 
+- `test_post_add_location(client, app)` tests that submitting valid location data via POST results in a successful redirect or page load. 
 <br/><br/>
 
 

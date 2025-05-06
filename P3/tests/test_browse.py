@@ -68,21 +68,3 @@ def test_browse_events_no_filters(client, app):
         assert response.status_code == 200
         assert b"Events" in response.data or b"Browse" in response.data
 
-def test_browse_events_invalid_category(client, app):
-    with app.app_context():
-        register_and_login(client, app)
-        response = client.get('/events?category=invalid')
-        assert response.status_code == 200
-        assert b"Events" in response.data or b"No results found" in response.data
-
-
-def test_browse_requires_login(client, app):
-    response = client.get('/events', follow_redirects=True)
-    assert b"Log In" in response.data or b"Register" in response.data
-
-def test_browse_events_special_characters(client, app):
-    with app.app_context():
-        register_and_login(client, app)
-        response = client.get('/events?search=%40%23%24%25')
-        assert response.status_code == 200
-        

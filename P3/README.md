@@ -131,14 +131,8 @@ Similar to Project 1, we followed a **Test-Last (Traditional) approach**, where 
 - `test_see_review(client)' checks that the reviews page for event ID 1 loads correctly and contains expected content.
 - `test_signup_and_drop_event(client, app)` tests whether a logged-in user can successfully sign up for and drop an event. 
 - `test_delete_review(client, app)` ensures that the delete review route returns a valid status code (302 for success or 404 if not found).
-
-**FIX THESE TWO**
-
-- `test_write_review_invalid_rating(client, app)` attempts to post a review with an invalid rating (6) and expects an sqlite3.IntegrityError due to rating constraints. 
-- `test_write_review_empty_comment(client, app)`
-Tries to submit a review with an empty comment and expects an UnboundLocalError, revealing potential input handling issues.
-
-
+- `test_write_review_invalid_rating(client, app)` ensures that submitting a review with an out-of-range rating (e.g., 6) does not insert the review and instead shows the appropriate error message. 
+- `test_write_review_empty_comment(client, app)` verifies that submitting a review with an empty comment defaults the comment to "N/A" and successfully redirects to the review page without error.
 - `test_delete_nonexistent_review(client, app)` tests deletion of a non-existent review and expects a TypeError, verifying error handling for missing reviews.
 - `test_create_event_invalid_time_format(client, app)` attempts to create an event with an invalid time string and confirms the error message is rendered.
 - `test_create_event_past_time(client, app)` ensures that creating an event with a time in the past is blocked and an appropriate error message is shown.

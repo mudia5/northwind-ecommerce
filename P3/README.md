@@ -78,12 +78,16 @@ On Windows:
 
 `flask --app app init-db`
 
+*_Or if you have global Flask installation:_ `../.venv/bin/flask --app app init-db`
+
 <br>
 
 
 ### 7. Run the server
 
 `flask --app app run --debug`
+
+*_Or if you have global Flask installation:_ `../.venv/bin/flask --app app run --debug`
 
 Look for the `Running on http://127.0.0.1:5000` message and visit the printed url in your browser 
 
@@ -96,6 +100,13 @@ Look for the `Running on http://127.0.0.1:5000` message and visit the printed ur
 
 2. View coverage report: `coverage report`
 
+
+
+*_Or if you have global Python installation:_ 
+
+1. `../.venv/bin/python3 -m coverage run -m pytest` 
+
+2. `../.venv/bin/python3 -m coverage report`
  
 ### Approach to testing 
 

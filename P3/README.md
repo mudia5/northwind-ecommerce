@@ -58,23 +58,7 @@ On Windows:
 
 <br>
 
-### 4. Create a local copy of the Boston Area Activities database
-
-`cd app/`
-
-`sqlite3 boston_activities.db < schema.sql`
-
-<br>
-
-### 5. Populate `boston_activities.db` with data
-
-`python3 generate_data.py` // _The deprecation messages may be ignored as they do not affect the output._
-
-`cd ..`
-
-<br>
-
-### 6. Initialize the database
+### 4. Initialize and populate the database
 
 `flask --app app init-db`
 
@@ -83,7 +67,7 @@ On Windows:
 <br>
 
 
-### 7. Run the server
+### 5. Run the server
 
 `flask --app app run --debug`
 

@@ -72,14 +72,16 @@ On Windows:
 
 `cd ..`
 
-<!-- ### 6. Initialize the database
+<br>
 
-`flask --app app init-db` -->
+### 6. Initialize the database
+
+`flask --app app init-db`
 
 <br>
 
 
-### 6. Run the server
+### 7. Run the server
 
 `flask --app app run --debug`
 

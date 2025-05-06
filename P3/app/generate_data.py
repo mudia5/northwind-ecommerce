@@ -6,8 +6,13 @@ Script to generate dummy date for the database.
 from datetime import timedelta, datetime, date
 from random import randint, choice
 import string
+import os
 import sqlite3
 from werkzeug.security import generate_password_hash
+
+
+BASE_DIR: str = os.path.abspath(os.path.dirname(__file__))
+DB_PATH: str = os.path.join(BASE_DIR, 'boston_activities.db')
 
 
 def random_date(start: datetime, end: datetime) -> date:
@@ -340,7 +345,7 @@ def generate_hosts(c: sqlite3.Cursor) -> None:
         print('Error inserting data into hosts table')
 
 
-def main(db_path: str = './boston_activities.db') -> None:
+def main(db_path: str = DB_PATH) -> None:
     """The main function"""
     db: sqlite3.Connection = sqlite3.connect(db_path)
     c: sqlite3.Cursor = db.cursor()

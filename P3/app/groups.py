@@ -29,8 +29,11 @@ def signup(group_name: str) -> Response:
         )
         db.commit()
         flash('You have successfully signed up for this group.')
-    except sqlite3.IntegrityError:
-        flash('You are already signed up for this group.')
+    except sqlite3.IntegrityError as e:
+        if 'UNIQUE constraint failed: Membership.group_name, Membership.user_id' in str(e):
+            flash('You are already signed up for this group.')
+        else:
+            flash('Unable to join group.')
     return redirect(url_for('browse.mypage'))
 
 

@@ -26,7 +26,7 @@ This real-world database application offers **residents of the Boston area** a c
 
 `git clone https://github.com/mudia5/northwind-ecommerce.git`
 
-`cd northwind-ecommerce/`
+`cd northwind-ecommerce/P3/`
 
 <br>
 
@@ -35,7 +35,7 @@ This real-world database application offers **residents of the Boston area** a c
 On macOS/Linux:
 
 
-`python3 -m venv .venv`
+`python -m venv .venv`
 
 `. .venv/bin/activate`
 
@@ -52,9 +52,7 @@ On Windows:
 
 ### 3. Install dependencies 
 
-`cd P3/`
-
-`pip3 install -r requirements.txt`
+`pip install -r requirements.txt`
 
 <br>
 
@@ -62,7 +60,7 @@ On Windows:
 
 `flask --app app init-db`
 
-*_Or if you have global Flask installation:_ `../.venv/bin/flask --app app init-db`
+*_Or if you have global Flask installation:_ `.venv/bin/flask --app app init-db`
 
 <br>
 
@@ -71,7 +69,7 @@ On Windows:
 
 `flask --app app run --debug`
 
-*_Or if you have global Flask installation:_ `../.venv/bin/flask --app app run --debug`
+*_Or if you have global Flask installation:_ `.venv/bin/flask --app app run --debug`
 
 Look for the `Running on http://127.0.0.1:5000` message and visit the printed url in your browser 
 
@@ -88,9 +86,9 @@ Look for the `Running on http://127.0.0.1:5000` message and visit the printed ur
 
 *_Or if you have global Python installation:_ 
 
-1. `../.venv/bin/python3 -m coverage run -m pytest` 
+1. `.venv/bin/python3 -m coverage run -m pytest` 
 
-2. `../.venv/bin/python3 -m coverage report`
+2. `.venv/bin/python3 -m coverage report`
  
 ### Approach to testing 
 
@@ -183,8 +181,8 @@ In addition to supporting activity groups across the Boston area, our applicatio
 Our application includes a user authentication system that allows individuals to register accounts and **access personalized features**. Logged-in users can manage their group memberships and event registrations, create events, submit reviews, and access pages restricted to authenticated users. If an unauthenticated user attempts to access the create event or create group forms, they are redirected to the login page, ensuring secure and appropriate **access control**. Once users log in, they are returned to the page they were previously at. 
 
 ### Error Handling
-To maintain the consistency and reliability of the data, we implemented extensive integrity constraints in the Project 2 database design, particularly NOT NULL and CHECK constraints. In the web application, we built on this foundation by incorporating front-end and back-end error handling to **prevent system crashes** and instead provide **informative feedback** to users. For example, the event creation form displays clear error messages when an invalid date is submitted (e.g., a past date or incorrect format), and the review submission form warns users if a rating falls outside the valid 1–5 range. Furthermore, forms cannot be submitted if the required fields are blank. 
+To maintain the consistency and reliability of the data, we implemented extensive integrity constraints in the Project 2 database design, particularly NOT NULL and CHECK constraints. In the web application, we built on this foundation by incorporating front-end and back-end error handling to **prevent system crashes** and instead provide **informative feedback** to users. For example, the event creation form displays clear error messages when an invalid date is submitted (e.g., a past date or incorrect format), and the review submission form warns users if a rating falls outside the valid 1–5 range. Users are notified if they try to join the same group twice or other errors occur during the sign-up process. Furthermore, forms cannot be submitted if the required fields are blank. 
 
 ### Flexibility
-We intentionally designed our forms to be **flexible** and **user-friendly**. Many input fields are optional, allowing for greater customization and ease of use. Event hosts may choose whether to set a maximum attendee limit, group creators can optionally define age restrictions, and users can submit ratings with or without accompanying comments. 
+We intentionally designed our forms to be **flexible** and **user-friendly**. Many input fields are optional, allowing for greater customization and ease of use. Event hosts may choose whether to set a maximum attendee limit, group creators can optionally define age restrictions, and users can submit ratings with or without accompanying comments. Database entries are accordingly set as NULL and displayed as N/A if left blank. 
 
